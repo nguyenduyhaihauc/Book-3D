@@ -73,7 +73,7 @@ export const UI = () => {
           setTimeout(() => {
             currentPage = totalPages;
             autoFlip();
-          }, 700);
+          }, 800);
           return;
         }
       } else {
@@ -96,7 +96,7 @@ export const UI = () => {
     // Bắt đầu tự động lật sau 1 giây
     const startTimer = setTimeout(() => {
       autoFlip();
-    }, 1000);
+    }, 2000);
 
     return () => {
       clearTimeout(startTimer);
