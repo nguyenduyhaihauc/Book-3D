@@ -17,7 +17,7 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { pageAtom, pages } from "./UI";
+import { pageAtom, pages, autoFlipEnabledAtom } from "./UI";
 
 const easingFactor = 0.5; // Controls the speed of the easing
 const easingFactorFold = 0.3; // Controls the speed of the easing
@@ -91,6 +91,7 @@ pages.forEach((page) => {
   useTexture.preload(`/textures/book-cover-roughness.jpg`);
 });
 
+// Load và hiển thị ảnh trong sách
 const Page = ({ number, front, back, page, opened, bookClosed, ...props }) => {
   const [picture, picture2, pictureRoughness] = useTexture([
     `/textures/${front}.jpg`,
@@ -122,6 +123,7 @@ const Page = ({ number, front, back, page, opened, bookClosed, ...props }) => {
     }
     const skeleton = new Skeleton(bones);
 
+    // Áp dụng ảnh lên material để hiển thị
     const materials = [
       ...pageMaterials,
       new MeshStandardMaterial({
@@ -232,22 +234,26 @@ const Page = ({ number, front, back, page, opened, bookClosed, ...props }) => {
   });
 
   const [_, setPage] = useAtom(pageAtom);
+  const [autoFlipEnabled] = useAtom(autoFlipEnabledAtom);
   const [highlighted, setHighlighted] = useState(false);
-  useCursor(highlighted);
+  useCursor(highlighted && autoFlipEnabled);
 
   return (
     <group
       {...props}
       ref={group}
       onPointerEnter={(e) => {
+        if (!autoFlipEnabled) return;
         e.stopPropagation();
         setHighlighted(true);
       }}
       onPointerLeave={(e) => {
+        if (!autoFlipEnabled) return;
         e.stopPropagation();
         setHighlighted(false);
       }}
       onClick={(e) => {
+        if (!autoFlipEnabled) return;
         e.stopPropagation();
         setPage(opened ? number : number + 1);
         setHighlighted(false);

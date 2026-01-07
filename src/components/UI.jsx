@@ -1,39 +1,30 @@
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
+// List ảnh trong sach
 const pictures = [
-  "DSC00680",
-  "DSC00933",
-  "DSC00966",
-  "DSC00983",
-  "DSC01011",
-  "DSC01040",
-  "DSC01064",
-  "DSC01071",
-  "DSC01103",
-  "DSC01145",
-  "DSC01420",
-  "DSC01461",
-  "DSC01489",
-  "DSC02031",
-  "DSC02064",
-  "DSC02069",
-  "anh21",
-  "anh22",
-  "anh23",
-  "anh24",
-  "anh25",
-  "anh26",
-  "anh27",
-  "anh28",
-  "anh29",
-  "anh31",
+  "nam_1",
+  "nam_2",
+  "nam_3",
+  "nam_4",
+  "nghi_1",
+  "nghi_2",
+  "nghi_3",
+  "nghi_4",
+  "trieu_1",
+  "trieu_2",
+  "trieu_3",
+  "trieu_4",
+  "trieu_5",
+  "trieu_6",
 ];
 
 export const pageAtom = atom(0);
+export const autoFlipEnabledAtom = atom(false);
+// Hiển thị ảnh bìa trước và bìa sau
 export const pages = [
   {
-    front: "book-cover",
+    front: "bìa_truoc",
     back: pictures[0],
   },
 ];
@@ -51,21 +42,76 @@ pages.push({
 
 export const UI = () => {
   const [page, setPage] = useAtom(pageAtom);
+  const [autoFlipEnabled, setAutoFlipEnabled] = useAtom(autoFlipEnabledAtom);
+  const [isAutoFlipping, setIsAutoFlipping] = useState(true);
 
   useEffect(() => {
     const audio = new Audio("/audios/page-flip-01a.mp3");
     audio.play();
   }, [page]);
 
+  // Tự động lật trang khi bắt đầu
+  useEffect(() => {
+    if (!isAutoFlipping) return;
+
+    let currentPage = 0;
+    let direction = 1; // 1 = tăng, -1 = giảm
+    let hasReachedEnd = false;
+
+    const autoFlip = () => {
+      const totalPages = pages.length;
+
+      if (!hasReachedEnd) {
+        // Lật từ đầu đến cuối
+        if (currentPage < totalPages) {
+          currentPage++;
+          setPage(currentPage);
+        } else {
+          hasReachedEnd = true;
+          direction = -1;
+          // Đợi một chút trước khi lật ngược lại
+          setTimeout(() => {
+            currentPage = totalPages;
+            autoFlip();
+          }, 700);
+          return;
+        }
+      } else {
+        // Lật ngược lại từ cuối về đầu
+        if (currentPage > 0) {
+          currentPage--;
+          setPage(currentPage);
+        } else {
+          // Đã lật xong, cho phép người dùng tự lật
+          setIsAutoFlipping(false);
+          setAutoFlipEnabled(true);
+          return;
+        }
+      }
+
+      // Lật trang tiếp theo sau 500ms
+      setTimeout(autoFlip, 300);
+    };
+
+    // Bắt đầu tự động lật sau 1 giây
+    const startTimer = setTimeout(() => {
+      autoFlip();
+    }, 1000);
+
+    return () => {
+      clearTimeout(startTimer);
+    };
+  }, [isAutoFlipping, setPage, setAutoFlipEnabled]);
+
   return (
     <>
       <main className=" pointer-events-none select-none z-10 fixed  inset-0  flex justify-between flex-col">
         <div className="pointer-events-auto mt-10 ml-10">
-          <img
+          {/* <img
             className="w-20"
             src="/images/wawasensei-white.png"
             alt="K31 TIN MAT GOC"
-          />
+          /> */}
         </div>
         <div className="w-full overflow-auto pointer-events-auto flex justify-center">
           <div className="overflow-auto flex items-center gap-4 max-w-full p-10">
@@ -76,8 +122,11 @@ export const UI = () => {
                   index === page
                     ? "bg-white/90 text-black"
                     : "bg-black/30 text-white"
-                }`}
-                onClick={() => setPage(index)}
+                } ${!autoFlipEnabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                onClick={() => {
+                  if (autoFlipEnabled) setPage(index);
+                }}
+                disabled={!autoFlipEnabled}
               >
                 {index === 0 ? "Bìa" : `Trang ${index}`}
               </button>
@@ -87,8 +136,11 @@ export const UI = () => {
                 page === pages.length
                   ? "bg-white/90 text-black"
                   : "bg-black/30 text-white"
-              }`}
-              onClick={() => setPage(pages.length)}
+              } ${!autoFlipEnabled ? "opacity-50 cursor-not-allowed" : ""}`}
+              onClick={() => {
+                if (autoFlipEnabled) setPage(pages.length);
+              }}
+              disabled={!autoFlipEnabled}
             >
               Bìa sau
             </button>
@@ -96,7 +148,7 @@ export const UI = () => {
         </div>
       </main>
 
-      <div className="fixed inset-0 flex items-center -rotate-2 select-none">
+      {/* <div className="fixed inset-0 flex items-center -rotate-2 select-none">
         <div className="relative">
           <div className="bg-white/0  animate-horizontal-scroll flex items-center gap-8 w-max px-8">
             <h1 className="shrink-0 text-white text-10xl font-black ">
@@ -151,7 +203,7 @@ export const UI = () => {
             </h2>
           </div>
         </div>
-      </div>
+      </div> */}
     </>
   );
 };

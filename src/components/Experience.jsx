@@ -11,7 +11,13 @@ export const Experience = () => {
       >
         <Book scale={1.5} />
       </Float>
-      <OrbitControls />
+      {/* Độ nHẠY XOAY CỦA SÁCH */}
+      <OrbitControls
+        enableDamping={true}
+        dampingFactor={0.05}
+        rotateSpeed={0.5}
+        zoomSpeed={0.8}
+      />
       <Environment preset="studio"></Environment>
       <directionalLight
         position={[2, 5, 2]}

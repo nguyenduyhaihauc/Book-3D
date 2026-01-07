@@ -6,7 +6,9 @@
 #root {
   width: 100vw;
   height: 100vh;
-  background: radial-gradient(#5a47ce, #232323 80%);
+  background: #b82323;
+  /* background: radial-gradient(#5a47ce, #232323 80%); */
+  /* đây là chỗ để đổi background của trang web*/
 }
 
 body {
