@@ -23,6 +23,7 @@ const pictures = [
 
 export const pageAtom = atom(0);
 export const autoFlipEnabledAtom = atom(false);
+export const shouldRotateBookAtom = atom(false);
 // Hiển thị ảnh bìa trước và bìa sau
 export const pages = [
   {
@@ -47,6 +48,7 @@ export const UI = () => {
   const [autoFlipEnabled, setAutoFlipEnabled] = useAtom(autoFlipEnabledAtom);
   const [isAutoFlipping, setIsAutoFlipping] = useState(true);
   const [currentView, setCurrentView] = useAtom(currentViewAtom);
+  const [, setShouldRotateBook] = useAtom(shouldRotateBookAtom);
 
   useEffect(() => {
     const audio = new Audio("/audios/page-flip-01a.mp3");
@@ -58,45 +60,27 @@ export const UI = () => {
     if (!isAutoFlipping) return;
 
     let currentPage = 0;
-    let direction = 1; // 1 = tăng, -1 = giảm
-    let hasReachedEnd = false;
 
     const autoFlip = () => {
       const totalPages = pages.length;
 
-      if (!hasReachedEnd) {
-        // Lật từ đầu đến cuối
-        if (currentPage < totalPages) {
-          currentPage++;
-          setPage(currentPage);
-        } else {
-          hasReachedEnd = true;
-          direction = -1;
-          // Đợi một chút trước khi lật ngược lại
-          setTimeout(() => {
-            currentPage = totalPages;
-            autoFlip();
-          }, 800);
-          return;
-        }
+      // Lật từ đầu đến cuối
+      if (currentPage < totalPages) {
+        currentPage++;
+        setPage(currentPage);
+        // Lật trang tiếp theo sau 300ms
+        setTimeout(autoFlip, 300);
       } else {
-        // Lật ngược lại từ cuối về đầu
-        if (currentPage > 0) {
-          currentPage--;
-          setPage(currentPage);
-        } else {
-          // Đã lật xong, cho phép người dùng tự lật
-          setIsAutoFlipping(false);
-          setAutoFlipEnabled(true);
-          return;
-        }
+        // Đã đến trang cuối, dừng auto-flip và kích hoạt xoay sách
+        setIsAutoFlipping(false);
+        // Kích hoạt xoay sách
+        setTimeout(() => {
+          setShouldRotateBook(true);
+        }, 800); // Đợi một chút trước khi bắt đầu xoay
       }
-
-      // Lật trang tiếp theo sau 500ms
-      setTimeout(autoFlip, 300);
     };
 
-    // Bắt đầu tự động lật sau 1 giây
+    // Bắt đầu tự động lật sau 2 giây
     const startTimer = setTimeout(() => {
       autoFlip();
     }, 2000);
@@ -104,7 +88,7 @@ export const UI = () => {
     return () => {
       clearTimeout(startTimer);
     };
-  }, [isAutoFlipping, setPage, setAutoFlipEnabled]);
+  }, [isAutoFlipping, setPage, setShouldRotateBook]);
 
   return (
     <>

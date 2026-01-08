@@ -17,7 +17,12 @@ import {
   Vector3,
 } from "three";
 import { degToRad } from "three/src/math/MathUtils.js";
-import { pageAtom, pages, autoFlipEnabledAtom } from "./UI";
+import {
+  pageAtom,
+  pages,
+  autoFlipEnabledAtom,
+  shouldRotateBookAtom,
+} from "./UI";
 
 const easingFactor = 0.5; // Controls the speed of the easing
 const easingFactorFold = 0.3; // Controls the speed of the easing
@@ -271,6 +276,18 @@ const Page = ({ number, front, back, page, opened, bookClosed, ...props }) => {
 export const Book = ({ ...props }) => {
   const [page] = useAtom(pageAtom);
   const [delayedPage, setDelayedPage] = useState(page);
+  const [shouldRotateBook, setShouldRotateBook] = useAtom(shouldRotateBookAtom);
+  const [, setAutoFlipEnabled] = useAtom(autoFlipEnabledAtom);
+  const bookGroupRef = useRef();
+  const [targetRotation, setTargetRotation] = useState(-Math.PI / 2); // Bắt đầu từ mặt sau
+  const rotationStarted = useRef(false);
+  const rotationStartTime = useRef(0);
+  const rotationStartAngle = useRef(-Math.PI / 2);
+  const rotationStartX = useRef(0);
+  const rotationStartZ = useRef(0);
+  const scaleStart = useRef(1.5);
+  const positionStartY = useRef(0);
+  const rotationDuration = 2500; // 2.5 giây để xoay mượt mà và nghệ thuật hơn
 
   useEffect(() => {
     let timeout;
@@ -300,8 +317,89 @@ export const Book = ({ ...props }) => {
     };
   }, [page]);
 
+  // Xử lý xoay sách khi đến trang cuối
+  useEffect(() => {
+    if (shouldRotateBook && !rotationStarted.current && page === pages.length) {
+      rotationStarted.current = true;
+      rotationStartTime.current = Date.now();
+      rotationStartAngle.current =
+        bookGroupRef.current?.rotation.y || -Math.PI / 2;
+      rotationStartX.current = bookGroupRef.current?.rotation.x || 0;
+      rotationStartZ.current = bookGroupRef.current?.rotation.z || 0;
+      scaleStart.current = bookGroupRef.current?.scale.x || 1.5;
+      positionStartY.current = bookGroupRef.current?.position.y || 0;
+      // Xoay 180 độ từ mặt sau về mặt trước
+      // Từ -Math.PI / 2 về Math.PI / 2 (xoay 180 độ)
+      setTargetRotation(Math.PI / 2);
+    }
+  }, [shouldRotateBook, page]);
+
+  // Animation xoay sách nghệ thuật - xoay đa trục với easing curve đẹp mắt
+  useFrame(() => {
+    if (bookGroupRef.current && rotationStarted.current) {
+      const elapsed = Date.now() - rotationStartTime.current;
+      const progress = Math.min(elapsed / rotationDuration, 1);
+
+      // Sử dụng easeOutBack để có hiệu ứng "bounce" nhẹ và nghệ thuật
+      // Công thức: 1 + c * Math.pow(t - 1, 3) + c * Math.pow(t - 1, 2)
+      const c1 = 1.70158;
+      const c3 = c1 + 1;
+      const easeOutBack =
+        1 + c3 * Math.pow(progress - 1, 3) + c1 * Math.pow(progress - 1, 2);
+
+      // Tính góc xoay Y (xoay chính)
+      const startAngle = rotationStartAngle.current;
+      const endAngle = targetRotation;
+      let angleDiff = endAngle - startAngle;
+      while (angleDiff > Math.PI) angleDiff -= 2 * Math.PI;
+      while (angleDiff < -Math.PI) angleDiff += 2 * Math.PI;
+      const currentAngleY = startAngle + angleDiff * easeOutBack;
+
+      // Xoay nhẹ theo trục X để tạo chiều sâu (nghiêng nhẹ khi xoay)
+      // Tạo hiệu ứng như sách đang "lật" một cách tự nhiên
+      const tiltAmount = Math.sin(progress * Math.PI) * 0.15; // Nghiêng tối đa 0.15 radian
+      const currentAngleX = rotationStartX.current + tiltAmount;
+
+      // Xoay nhẹ theo trục Z để tạo động lực (xoay nghiêng nhẹ)
+      const rollAmount = Math.sin(progress * Math.PI * 2) * 0.08; // Xoay nghiêng nhẹ
+      const currentAngleZ = rotationStartZ.current + rollAmount;
+
+      // Áp dụng các rotation
+      bookGroupRef.current.rotation.y = currentAngleY;
+      bookGroupRef.current.rotation.x = currentAngleX;
+      bookGroupRef.current.rotation.z = currentAngleZ;
+
+      // Thêm scale animation nhẹ (phóng to một chút khi xoay giữa chừng)
+      const scalePulse = 1 + Math.sin(progress * Math.PI) * 0.05; // Phóng to 5% ở giữa
+      const currentScale = scaleStart.current * scalePulse;
+      bookGroupRef.current.scale.set(currentScale, currentScale, currentScale);
+
+      // Thêm position animation nhẹ (nâng lên một chút khi xoay)
+      const liftAmount = Math.sin(progress * Math.PI) * 0.1; // Nâng lên 0.1 đơn vị
+      bookGroupRef.current.position.y = positionStartY.current + liftAmount;
+
+      // Kiểm tra xem đã xoay xong chưa
+      if (progress >= 1) {
+        // Đặt chính xác các giá trị cuối cùng
+        bookGroupRef.current.rotation.y = targetRotation;
+        bookGroupRef.current.rotation.x = rotationStartX.current;
+        bookGroupRef.current.rotation.z = rotationStartZ.current;
+        bookGroupRef.current.scale.set(
+          scaleStart.current,
+          scaleStart.current,
+          scaleStart.current
+        );
+        bookGroupRef.current.position.y = positionStartY.current;
+        // Đã xoay xong, cho phép người dùng tự lật
+        setAutoFlipEnabled(true);
+        setShouldRotateBook(false);
+        rotationStarted.current = false;
+      }
+    }
+  });
+
   return (
-    <group {...props} rotation-y={-Math.PI / 2}>
+    <group {...props} ref={bookGroupRef} rotation-y={targetRotation}>
       {[...pages].map((pageData, index) => (
         <Page
           key={index}
