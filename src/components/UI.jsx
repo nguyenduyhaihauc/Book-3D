@@ -105,6 +105,7 @@ export const UI = () => {
             <div className="overflow-auto flex items-center gap-4 max-w-full p-10">
               <button
                 className="border-white hover:bg-white/20 transition-all duration-300 px-8 py-4 rounded-full text-xl uppercase border-2 bg-black/30 text-white font-semibold"
+                style={{ fontFamily: "'Dancing Script', cursive" }}
                 onClick={() => {
                   setCurrentView("letters");
                 }}
