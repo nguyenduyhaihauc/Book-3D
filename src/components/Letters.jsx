@@ -5,10 +5,12 @@ export const Letters = () => {
   const [displayedTitle, setDisplayedTitle] = useState("");
   const [displayedContent, setDisplayedContent] = useState("");
   const [showSignature, setShowSignature] = useState(false);
+  const [showFireworksIcon, setShowFireworksIcon] = useState(false);
   const letterContainerRef = useRef(null);
   const titleRef = useRef(null);
   const contentRef = useRef(null);
   const signatureRef = useRef(null);
+  const fireworksIconRef = useRef(null);
 
   const title = "Chúc Mừng Năm Mới";
   const content = `Kính gửi những người thân yêu,
@@ -25,6 +27,7 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
       setDisplayedTitle("");
       setDisplayedContent("");
       setShowSignature(false);
+      setShowFireworksIcon(false);
       return;
     }
 
@@ -111,7 +114,28 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
           // Sau khi viết xong nội dung, hiển thị chữ ký
           setTimeout(() => {
             setShowSignature(true);
-            setTimeout(() => scrollToElement(signatureRef), 100);
+            setTimeout(() => {
+              scrollToElement(signatureRef);
+              // Sau khi hiển thị chữ ký, hiển thị icon fireworks
+              setTimeout(() => {
+                setShowFireworksIcon(true);
+                setTimeout(() => {
+                  if (fireworksIconRef.current && letterContainerRef.current) {
+                    const container = letterContainerRef.current;
+                    const iconElement = fireworksIconRef.current;
+                    const iconBottom =
+                      iconElement.offsetTop + iconElement.scrollHeight;
+                    const containerHeight = container.clientHeight;
+                    const scrollTop = container.scrollTop;
+
+                    container.scrollTo({
+                      top: iconBottom - containerHeight + 100,
+                      behavior: "smooth",
+                    });
+                  }
+                }, 100);
+              }, 800);
+            }, 100);
           }, 500);
         }
       }, 50); // Tốc độ viết: 50ms mỗi ký tự
@@ -211,6 +235,63 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
                 Với tình yêu thương,
                 <br />
                 <span className="mt-2 inline-block">Your Name</span>
+              </div>
+            )}
+
+            {/* Icon fireworks với ánh sáng xung quanh */}
+            {showFireworksIcon && (
+              <div
+                ref={fireworksIconRef}
+                className="flex justify-center mt-8 mb-4 animate-fade-in relative"
+              >
+                {/* Ánh sáng xung quanh */}
+                <div className="absolute inset-0 flex items-center justify-center">
+                  {/* Glow effect */}
+                  <div className="absolute w-20 h-20 md:w-24 md:h-24 rounded-full animate-glow-pulse"></div>
+                  <div className="absolute w-16 h-16 md:w-20 md:h-20 rounded-full animate-glow-pulse-delayed"></div>
+
+                  {/* Sparkles */}
+                  {[...Array(12)].map((_, i) => {
+                    const angle = i * 30 * (Math.PI / 180);
+                    const radius = 30;
+                    const x = Math.cos(angle) * radius;
+                    const y = Math.sin(angle) * radius;
+                    const delay = i * 0.1;
+                    return (
+                      <div
+                        key={i}
+                        className="absolute w-1.5 h-1.5 rounded-full animate-sparkle"
+                        style={{
+                          "--sparkle-x": `${x}px`,
+                          "--sparkle-y": `${y}px`,
+                          animationDelay: `${delay}s`,
+                          background: `radial-gradient(circle, 
+                            ${
+                              i % 3 === 0
+                                ? "#FFD700"
+                                : i % 3 === 1
+                                ? "#FF6B6B"
+                                : "#4ECDC4"
+                            } 0%, 
+                            transparent 70%)`,
+                        }}
+                      ></div>
+                    );
+                  })}
+                </div>
+
+                {/* Icon fireworks */}
+                <div className="relative z-10">
+                  <img
+                    src="/images/fireworks.png"
+                    alt="Fireworks"
+                    className="w-12 h-12 md:w-16 md:h-16 cursor-pointer animate-fireworks-magic hover:scale-110 transition-transform duration-300"
+                    onClick={() => {
+                      // Có thể thêm logic chuyển trang ở đây nếu cần
+                      console.log("Fireworks clicked!");
+                    }}
+                  />
+                </div>
               </div>
             )}
           </div>
