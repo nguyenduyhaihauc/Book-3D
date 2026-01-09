@@ -27,3 +27,8 @@ body {
 .outline-text {
   -webkit-text-stroke: 1px white;
 }
+
+/* Ẩn scrollbar nhưng vẫn giữ chức năng scroll */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}

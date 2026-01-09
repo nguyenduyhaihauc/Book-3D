@@ -250,12 +250,14 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
         <div className="w-full h-full flex items-center justify-center p-4">
           <div
             ref={letterContainerRef}
-            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 max-h-[90vh] overflow-y-auto border border-white/20"
+            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 max-h-[90vh] overflow-y-auto border border-white/20 scrollbar-hide"
             style={{
               background:
                 "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))",
               boxShadow:
                 "0 8px 32px 0 rgba(255, 215, 0, 0.2), 0 0 80px rgba(255, 107, 107, 0.15)",
+              scrollbarWidth: "none", // Firefox
+              msOverflowStyle: "none", // IE and Edge
             }}
           >
             {/* Nút đóng */}
