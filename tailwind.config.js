@@ -15,6 +15,7 @@ export default {
       animation: {
         "horizontal-scroll": "horizontal-scroll linear 16s infinite ",
         "horizontal-scroll-2": "horizontal-scroll-2 linear 16s infinite ",
+        "fade-in": "fade-in 0.5s ease-in",
       },
       keyframes: {
         "horizontal-scroll": {
@@ -24,6 +25,10 @@ export default {
         "horizontal-scroll-2": {
           from: { transform: "translateX(100%)" },
           to: { transform: "translateX(0)" },
+        },
+        "fade-in": {
+          from: { opacity: "0" },
+          to: { opacity: "1" },
         },
       },
     },
