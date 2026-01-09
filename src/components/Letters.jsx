@@ -173,13 +173,78 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
       }}
     >
       {!showLetter ? (
-        <div className="text-center">
-          <img
-            src="/images/greeting-card.png"
-            alt="Greeting Card"
-            className="w-48 h-48 md:w-64 md:h-64 cursor-pointer hover:scale-110 transition-transform duration-300 mx-auto"
-            onClick={() => setShowLetter(true)}
-          />
+        <div className="text-center relative flex items-center justify-center">
+          {/* Ánh sáng xung quanh phong thư */}
+          <div className="absolute inset-0 flex items-center justify-center">
+            {/* Glow effect lớn */}
+            <div className="absolute w-96 h-96 rounded-full animate-envelope-glow-large"></div>
+            {/* Glow effect nhỏ */}
+            <div className="absolute w-80 h-80 rounded-full animate-envelope-glow-small"></div>
+
+            {/* Sparkles xung quanh */}
+            {[...Array(16)].map((_, i) => {
+              const angle = i * 22.5 * (Math.PI / 180);
+              const radius = 140;
+              const x = Math.cos(angle) * radius;
+              const y = Math.sin(angle) * radius;
+              const delay = i * 0.15;
+              const colors = [
+                "#FFD700",
+                "#FF6B6B",
+                "#4ECDC4",
+                "#FFA500",
+                "#FF1493",
+                "#00CED1",
+              ];
+              return (
+                <div
+                  key={i}
+                  className="absolute w-3 h-3 rounded-full animate-envelope-sparkle"
+                  style={{
+                    "--sparkle-x": `${x}px`,
+                    "--sparkle-y": `${y}px`,
+                    animationDelay: `${delay}s`,
+                    background: `radial-gradient(circle, 
+                      ${colors[i % colors.length]} 0%, 
+                      transparent 70%)`,
+                    boxShadow: `0 0 10px ${colors[i % colors.length]}`,
+                  }}
+                ></div>
+              );
+            })}
+
+            {/* Light rays */}
+            {[...Array(8)].map((_, i) => {
+              const rotation = i * 45;
+              return (
+                <div
+                  key={`ray-${i}`}
+                  className="absolute w-1 h-40 animate-light-ray"
+                  style={{
+                    background:
+                      "linear-gradient(to bottom, rgba(255, 215, 0, 0.3), transparent)",
+                    transformOrigin: "center",
+                    transform: `rotate(${rotation}deg)`,
+                    animationDelay: `${i * 0.2}s`,
+                  }}
+                ></div>
+              );
+            })}
+          </div>
+
+          {/* Phong thư */}
+          <div className="relative z-10">
+            <img
+              src="/images/phong_thu.png"
+              alt="Phong thư"
+              className="w-48 h-48 md:w-64 md:h-64 cursor-pointer hover:scale-110 transition-transform duration-300 mx-auto animate-envelope-float"
+              onClick={() => setShowLetter(true)}
+              style={{
+                filter:
+                  "drop-shadow(0 0 20px rgba(255, 215, 0, 0.5)) drop-shadow(0 0 40px rgba(255, 107, 107, 0.3))",
+              }}
+            />
+          </div>
         </div>
       ) : (
         <div className="w-full h-full flex items-center justify-center p-4">
