@@ -12,14 +12,16 @@ export const Letters = () => {
   const signatureRef = useRef(null);
   const fireworksIconRef = useRef(null);
 
-  const title = "Chúc Mừng Năm Mới";
-  const content = `Kính gửi những người thân yêu,
+  const title = "Gửi Tới Em Người Anh Yêu";
+  const content = `Em à,
 
-Năm mới đã đến, mang theo những hy vọng và ước mơ mới. Chúng ta cùng nhau bước vào một hành trình mới với tinh thần lạc quan và quyết tâm.
+Khi năm cũ khép lại, anh chỉ muốn nói một điều giản dị nhưng xuất phát từ tận đáy lòng: cảm ơn em vì đã cùng anh đi hết một năm vừa qua. Không phải vì mọi thứ đều hoàn hảo, mà vì chúng ta đã không rời bỏ nhau khi mọi thứ chưa hoàn hảo.
 
-Chúc mọi người một năm mới tràn đầy niềm vui, sức khỏe dồi dào, và thành công trong mọi lĩnh vực. Hãy luôn giữ cho mình một trái tim ấm áp và một tinh thần tích cực.
+Anh trân trọng cách em ở bên anh, không ồn ào, không phô trương, nhưng đủ ấm áp để anh luôn cảm thấy bình yên. Có em, anh học được thế nào là yêu một cách chín chắn và chân thành.
 
-Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những khoảnh khắc đáng nhớ và những kỷ niệm đẹp đẽ.`;
+Năm mới này, anh mong rằng chúng ta sẽ tiếp tục sánh bước bên nhau, cùng nhau vun đắp tình yêu bằng sự thấu hiểu, tin tưởng và sẻ chia. Dù tương lai có nhiều thử thách, anh vẫn muốn cùng em đi qua tất cả.
+
+Chúc cho chúng ta một năm mới thật nhiều yêu thương và nhiều năm sau nữa, vẫn là “chúng ta”.`;
 
   useEffect(() => {
     if (!showLetter) {
@@ -268,15 +270,15 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
               ×
             </button>
 
-            {/* Tiêu đề màu đỏ tết ở giữa */}
+            {/* Tiêu đề màu vàng may mắn ở giữa */}
             <h1
               ref={titleRef}
               className="text-center text-4xl md:text-5xl font-bold mb-8 animate-text-glow"
               style={{
-                color: "#DC143C",
+                color: "#FFD700",
                 fontFamily: "Dancing Script",
                 textShadow:
-                  "0 0 10px rgba(220, 20, 60, 0.8), 0 0 20px rgba(220, 20, 60, 0.6), 0 0 30px rgba(220, 20, 60, 0.4), 0 0 40px rgba(255, 215, 0, 0.3)",
+                  "0 0 10px rgba(255, 215, 0, 0.9), 0 0 20px rgba(255, 215, 0, 0.7), 0 0 30px rgba(255, 215, 0, 0.5), 0 0 40px rgba(255, 165, 0, 0.4), 0 0 50px rgba(255, 140, 0, 0.3)",
               }}
             >
               {displayedTitle}
@@ -317,9 +319,9 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
                     "0 0 8px rgba(255, 228, 181, 0.8), 0 0 15px rgba(255, 228, 181, 0.5), 0 0 25px rgba(255, 215, 0, 0.3)",
                 }}
               >
-                Với tình yêu thương,
+                Gửi em thế giới nhỏ trong anh,
                 <br />
-                <span className="mt-2 inline-block">Your Name</span>
+                <span className="mt-2 inline-block">An Nguyễn</span>
               </div>
             )}
 
