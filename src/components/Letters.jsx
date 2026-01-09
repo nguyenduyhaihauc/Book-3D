@@ -250,7 +250,13 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
         <div className="w-full h-full flex items-center justify-center p-4">
           <div
             ref={letterContainerRef}
-            className="relative bg-white rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 max-h-[90vh] overflow-y-auto"
+            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 max-h-[90vh] overflow-y-auto border border-white/20"
+            style={{
+              background:
+                "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))",
+              boxShadow:
+                "0 8px 32px 0 rgba(255, 215, 0, 0.2), 0 0 80px rgba(255, 107, 107, 0.15)",
+            }}
           >
             {/* Nút đóng */}
             <button
@@ -263,8 +269,13 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
             {/* Tiêu đề màu đỏ tết ở giữa */}
             <h1
               ref={titleRef}
-              className="text-center text-4xl md:text-5xl font-bold mb-8"
-              style={{ color: "#DC143C", fontFamily: "Dancing Script" }}
+              className="text-center text-4xl md:text-5xl font-bold mb-8 animate-text-glow"
+              style={{
+                color: "#DC143C",
+                fontFamily: "Dancing Script",
+                textShadow:
+                  "0 0 10px rgba(220, 20, 60, 0.8), 0 0 20px rgba(220, 20, 60, 0.6), 0 0 30px rgba(220, 20, 60, 0.4), 0 0 40px rgba(255, 215, 0, 0.3)",
+              }}
             >
               {displayedTitle}
               {displayedTitle.length < title.length && (
@@ -276,11 +287,13 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
             {displayedTitle === title && (
               <div
                 ref={contentRef}
-                className="text-lg md:text-xl leading-relaxed mb-8 whitespace-pre-line"
+                className="text-lg md:text-xl leading-relaxed mb-8 whitespace-pre-line animate-text-glow-subtle"
                 style={{
-                  color: "#D2B48C",
+                  color: "#FFE4B5",
                   fontFamily: "Dancing Script",
                   lineHeight: "1.8",
+                  textShadow:
+                    "0 0 8px rgba(255, 228, 181, 0.8), 0 0 15px rgba(255, 228, 181, 0.5), 0 0 25px rgba(255, 215, 0, 0.3)",
                 }}
               >
                 {formatContent(displayedContent)}
@@ -294,8 +307,13 @@ Mong rằng năm mới này sẽ mang đến cho tất cả chúng ta những kh
             {showSignature && (
               <div
                 ref={signatureRef}
-                className="text-right text-2xl md:text-3xl italic animate-fade-in"
-                style={{ color: "#D2B48C", fontFamily: "Dancing Script" }}
+                className="text-right text-2xl md:text-3xl italic animate-fade-in animate-text-glow-subtle"
+                style={{
+                  color: "#FFE4B5",
+                  fontFamily: "Dancing Script",
+                  textShadow:
+                    "0 0 8px rgba(255, 228, 181, 0.8), 0 0 15px rgba(255, 228, 181, 0.5), 0 0 25px rgba(255, 215, 0, 0.3)",
+                }}
               >
                 Với tình yêu thương,
                 <br />

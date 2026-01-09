@@ -25,6 +25,8 @@ export default {
         "envelope-sparkle": "envelope-sparkle 4s ease-in-out infinite",
         "envelope-float": "envelope-float 4s ease-in-out infinite",
         "light-ray": "light-ray 4s linear infinite",
+        "text-glow": "text-glow 2s ease-in-out infinite",
+        "text-glow-subtle": "text-glow-subtle 3s ease-in-out infinite",
       },
       keyframes: {
         "horizontal-scroll": {
@@ -155,6 +157,22 @@ export default {
           "100%": {
             opacity: "0",
             transform: "scaleY(0.5)",
+          },
+        },
+        "text-glow": {
+          "0%, 100%": {
+            textShadow: "0 0 10px rgba(220, 20, 60, 0.8), 0 0 20px rgba(220, 20, 60, 0.6), 0 0 30px rgba(220, 20, 60, 0.4), 0 0 40px rgba(255, 215, 0, 0.3)",
+          },
+          "50%": {
+            textShadow: "0 0 15px rgba(220, 20, 60, 1), 0 0 30px rgba(220, 20, 60, 0.8), 0 0 45px rgba(220, 20, 60, 0.6), 0 0 60px rgba(255, 215, 0, 0.5)",
+          },
+        },
+        "text-glow-subtle": {
+          "0%, 100%": {
+            textShadow: "0 0 8px rgba(255, 228, 181, 0.8), 0 0 15px rgba(255, 228, 181, 0.5), 0 0 25px rgba(255, 215, 0, 0.3)",
+          },
+          "50%": {
+            textShadow: "0 0 12px rgba(255, 228, 181, 1), 0 0 20px rgba(255, 228, 181, 0.7), 0 0 35px rgba(255, 215, 0, 0.5)",
           },
         },
       },
