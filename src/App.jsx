@@ -33,6 +33,12 @@ function App() {
               position: [-0.5, 1, window.innerWidth > 800 ? 4 : 9],
               fov: 45,
             }}
+            style={{
+              backgroundImage: 'url(/images/nen_tet_1.jpg)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+            }}
           >
             <group position-y={0}>
               <Suspense fallback={null}>
