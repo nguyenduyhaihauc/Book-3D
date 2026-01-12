@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import Fireworks from "../Fireworks";
 
 export const Letters = () => {
   const [showLetter, setShowLetter] = useState(false);
@@ -6,6 +7,7 @@ export const Letters = () => {
   const [displayedContent, setDisplayedContent] = useState("");
   const [showSignature, setShowSignature] = useState(false);
   const [showFireworksIcon, setShowFireworksIcon] = useState(false);
+  const [showFireworks, setShowFireworks] = useState(false);
   const letterContainerRef = useRef(null);
   const titleRef = useRef(null);
   const contentRef = useRef(null);
@@ -372,8 +374,7 @@ Chúc cho chúng ta một năm mới thật nhiều yêu thương và nhiều n�
                     alt="Fireworks"
                     className="w-12 h-12 md:w-16 md:h-16 cursor-pointer animate-fireworks-magic hover:scale-110 transition-transform duration-300"
                     onClick={() => {
-                      // Có thể thêm logic chuyển trang ở đây nếu cần
-                      console.log("Fireworks clicked!");
+                      setShowFireworks(true);
                     }}
                   />
                 </div>
@@ -382,6 +383,9 @@ Chúc cho chúng ta một năm mới thật nhiều yêu thương và nhiều n�
           </div>
         </div>
       )}
+
+      {/* Màn hình bắn pháo hoa */}
+      {showFireworks && <Fireworks />}
     </div>
   );
 };

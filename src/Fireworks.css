@@ -1,0 +1,209 @@
+/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
+.shape-gallery {
+	display: flex;
+	gap: 24px;
+	justify-content: center;
+	align-items: center;
+	padding: 16px;
+}
+.shape-card {
+	width: 240px;
+	height: 240px;
+	position: relative;
+}
+.shape-card img {
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	display: block;
+}
+/* Ảnh tròn */
+.shape-circle img {
+	border-radius: 50%;
+}
+/* Ảnh trái tim */
+.shape-heart img {
+	clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z");
+	-webkit-clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z");
+}
+/* Fallback mask cho trình duyệt cũ */
+@supports not (clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z")) {
+	.shape-heart img {
+		mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
+		-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
+		mask-size: contain;
+		-webkit-mask-size: contain;
+		mask-repeat: no-repeat;
+		-webkit-mask-repeat: no-repeat;
+	}
+}
+
+/* Layer chứa lời chúc bay trên nền pháo hoa */
+.wishes-layer {
+	position: absolute;
+	inset: 0;
+	z-index: 10; /* Hiển thị trên canvas */
+	pointer-events: none; /* không chặn click vào canvas / nút điều khiển */
+	transform-origin: center center;
+	transform-style: preserve-3d; /* Cho phép 3D transform */
+	will-change: transform; /* Tối ưu performance */
+}
+
+/* Tắt transition khi đang drag để giảm lag */
+.wishes-layer.dragging {
+	transition: none;
+}
+
+/* Wrapper anim bay lên (dùng transform riêng) */
+.wish-wrapper {
+	position: absolute;
+	bottom: -3rem;
+	left: 50%;
+	transform: translateX(-50%) translateY(0);
+	opacity: 0;
+	pointer-events: none; /* bản thân wrapper không nhận sự kiện */
+}
+
+/* Câu chúc màu hồng phát sáng, có thể xoay / thu phóng bằng tay */
+.wish-text {
+	display: inline-block;
+	font-size: 1.1rem;
+	padding: 0.4rem 1rem;
+	border-radius: 999px;
+	color: #ff9ad9;
+	text-shadow:
+		0 0 6px rgba(255, 105, 180, 0.9),
+		0 0 18px rgba(255, 20, 147, 0.8);
+	background: rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(255, 192, 203, 0.7);
+	box-shadow:
+		0 0 14px rgba(255, 105, 180, 0.7),
+		0 0 32px rgba(255, 20, 147, 0.4);
+	white-space: nowrap;
+	transform-origin: center center;
+	pointer-events: auto; /* cho phép chạm/drag để xoay, scale */
+}
+
+/* Responsive cho mobile */
+@media (max-width: 768px) {
+	.wish-text {
+		font-size: 0.9rem; /* Tăng font-size một chút để đọc tốt hơn */
+		padding: 0.35rem 1rem; /* Tăng padding để có không gian hơn */
+		max-width: 92vw; /* Tăng max-width để hiển thị nhiều chữ hơn */
+		min-width: 200px; /* Đảm bảo chiều rộng tối thiểu */
+		white-space: normal; /* Cho phép xuống dòng trên mobile */
+		word-wrap: break-word;
+		word-break: break-word; /* Ngắt từ tốt hơn */
+		display: -webkit-box;
+		-webkit-line-clamp: 2; /* Giới hạn tối đa 2 dòng */
+		line-clamp: 2; /* Thuộc tính chuẩn */
+		-webkit-box-orient: vertical;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		line-height: 1.5; /* Tăng line-height để đọc tốt hơn */
+	}
+}
+
+@media (max-width: 480px) {
+	.wish-text {
+		font-size: 0.8rem;
+		padding: 0.3rem 0.85rem;
+		max-width: 94vw; /* Tăng max-width trên mobile nhỏ */
+		min-width: 180px; /* Chiều rộng tối thiểu */
+		-webkit-line-clamp: 2; /* Vẫn giới hạn 2 dòng trên mobile nhỏ */
+		line-clamp: 2; /* Thuộc tính chuẩn */
+		line-height: 1.4;
+	}
+}
+
+/* Bay chậm đều từ dưới lên trên */
+@keyframes wishFloatUp {
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(10vh);
+	}
+	15% {
+		opacity: 1;
+	}
+	100% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(-110vh);
+	}
+}
+
+.wish-animate {
+	animation: wishFloatUp 7s linear forwards;
+}
+
+/* Ảnh bay lên cùng câu chúc */
+.wish-image {
+	display: inline-block;
+	width: 120px;
+	height: 120px;
+	object-fit: cover;
+	border-radius: 12px;
+	border: 3px solid rgba(255, 192, 203, 0.9);
+	box-shadow:
+		0 0 20px rgba(255, 105, 180, 0.8),
+		0 0 40px rgba(255, 20, 147, 0.6),
+		0 0 60px rgba(255, 20, 147, 0.4),
+		inset 0 0 20px rgba(255, 192, 203, 0.3);
+	transform-origin: center center;
+	pointer-events: auto;
+	animation: imageGlow 2s ease-in-out infinite alternate;
+}
+
+/* Responsive ảnh bay lên cho mobile */
+@media (max-width: 768px) {
+	.wish-image {
+		width: 80px;
+		height: 80px;
+		border-width: 2px;
+		border-radius: 8px;
+	}
+}
+
+@media (max-width: 480px) {
+	.wish-image {
+		width: 60px;
+		height: 60px;
+		border-width: 2px;
+		border-radius: 6px;
+	}
+}
+
+/* Hiệu ứng phát sáng cho ảnh */
+@keyframes imageGlow {
+	0% {
+		box-shadow:
+			0 0 20px rgba(255, 105, 180, 0.8),
+			0 0 40px rgba(255, 20, 147, 0.6),
+			0 0 60px rgba(255, 20, 147, 0.4),
+			inset 0 0 20px rgba(255, 192, 203, 0.3);
+		border-color: rgba(255, 192, 203, 0.9);
+	}
+	100% {
+		box-shadow:
+			0 0 30px rgba(255, 105, 180, 1),
+			0 0 60px rgba(255, 20, 147, 0.9),
+			0 0 90px rgba(255, 20, 147, 0.7),
+			inset 0 0 30px rgba(255, 192, 203, 0.5);
+		border-color: rgba(255, 255, 255, 1);
+	}
+}
+
+/* Wrapper cho ảnh */
+.wish-image-wrapper {
+	position: absolute;
+	bottom: -3rem;
+	left: 50%;
+	transform: translateX(-50%) translateY(0);
+	opacity: 0;
+	pointer-events: none;
+}
+
+/* Ẩn nút pause và nút cài đặt */
+.pause-btn,
+.settings-btn {
+	display: none !important;
+}
