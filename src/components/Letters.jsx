@@ -16,12 +16,7 @@ export const Letters = () => {
 
   const title = "Gửi Tới Em Người Anh Yêu";
   const content = `Em à,
-
-Khi năm cũ khép lại, anh chỉ muốn nói một điều xuất phát từ tận đáy lòng: cảm ơn em vì đã cùng anh đi hết một năm vừa qua.
-
-Năm mới này, anh mong rằng chúng ta sẽ tiếp tục sánh bước bên nhau, cùng nhau vun đắp tình yêu bằng sự thấu hiểu và sẻ chia. Dù tương lai có nhiều thử thách, anh vẫn muốn cùng em đi qua tất cả.
-
-Chúc cho chúng ta một năm mới thật nhiều yêu thương và nhiều năm sau nữa, vẫn là “chúng ta”.`;
+ nhiều năm sau nữa, vẫn là “chúng ta”.`;
 
   useEffect(() => {
     if (!showLetter) {

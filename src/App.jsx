@@ -8,7 +8,7 @@ import { Letters } from "./components/Letters";
 
 function App() {
   const [currentView] = useAtom(currentViewAtom);
-
+ 
   // Đoạn code phat nhạc nền
   useEffect(() => {
     // const music = new Audio("/audio/music.mp3");
