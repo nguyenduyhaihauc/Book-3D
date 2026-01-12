@@ -11,7 +11,7 @@ function App() {
 
   // Đoạn code phat nhạc nền
   useEffect(() => {
-    // const music = new Audio("/audios/music.mp3");
+    // const music = new Audio("/audio/music.mp3");
     // music.loop = true;
     // music.volume = 0.35;
     // music.play().catch(() => {});
@@ -34,10 +34,10 @@ function App() {
               fov: 45,
             }}
             style={{
-              backgroundImage: 'url(/images/nen_tet_1.jpg)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
+              backgroundImage: "url(/images/nen_tet_1.jpg)",
+              backgroundSize: "cover",
+              backgroundPosition: "center",
+              backgroundRepeat: "no-repeat",
             }}
           >
             <group position-y={0}>

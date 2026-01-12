@@ -51,7 +51,7 @@ export const UI = () => {
   const [, setShouldRotateBook] = useAtom(shouldRotateBookAtom);
 
   useEffect(() => {
-    const audio = new Audio("/audios/page-flip-01a.mp3");
+    const audio = new Audio("/audio/page-flip-01a.mp3");
     audio.play();
   }, [page]);
 
