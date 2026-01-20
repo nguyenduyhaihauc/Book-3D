@@ -36,7 +36,7 @@ function App() {
               fov: 45,
             }}
             style={{
-              backgroundImage: "url(/images/nen_tet_1.jpg)",
+              backgroundImage: "url(/images/bg_book.jpg)",
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
