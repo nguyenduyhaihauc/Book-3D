@@ -497,8 +497,12 @@ const TetMemoriesIntro = () => {
         <div className="space-y-3 sm:space-y-4 md:space-y-6 animate-slideUp">
           <div className="inline-block">
             <h1 
-              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-2 sm:mb-3 md:mb-4 px-2 sm:px-4 md:px-8"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-2 sm:mb-3 md:mb-4 px-2 sm:px-4 md:px-8 animate-text-glow"
+              style={{ 
+                fontFamily: "'Dancing Script', cursive",
+                textShadow: '0 0 20px rgba(255, 200, 100, 0.5), 0 0 40px rgba(255, 150, 80, 0.3), 0 0 60px rgba(255, 200, 100, 0.2)',
+                filter: 'drop-shadow(0 0 8px rgba(255, 200, 100, 0.4))'
+              }}
             >
               Tết Đến Xuân Về
             </h1>
@@ -507,15 +511,23 @@ const TetMemoriesIntro = () => {
         </div>
         
         <p 
-          className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed px-4 sm:px-6"
-          style={{ fontFamily: "'Dancing Script', cursive" }}
+          className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed px-4 sm:px-6 animate-text-glow-subtle"
+          style={{ 
+            fontFamily: "'Dancing Script', cursive",
+            textShadow: '0 0 15px rgba(255, 200, 100, 0.4), 0 0 30px rgba(255, 150, 80, 0.2)',
+            filter: 'drop-shadow(0 0 6px rgba(255, 200, 100, 0.3))'
+          }}
         >
           Những kỷ niệm đẹp năm vừa qua
         </p>
         
         <p 
           className="text-sm sm:text-base md:text-lg lg:text-xl text-orange-100/90 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed sm:leading-loose animate-slideUp animation-delay-500 font-light px-4 sm:px-6"
-          style={{ fontFamily: "'Dancing Script', cursive" }}
+          style={{ 
+            fontFamily: "'Dancing Script', cursive",
+            textShadow: '0 0 10px rgba(255, 150, 80, 0.3), 0 0 20px rgba(255, 200, 100, 0.2)',
+            filter: 'drop-shadow(0 0 4px rgba(255, 150, 80, 0.25))'
+          }}
         >
           Dòng thời gian lặng lẽ quay ngược, mang theo tiếng cười, yêu thương và những kỷ niệm đẹp đã làm nên một năm trọn vẹn và đáng nhớ.
         </p>
@@ -523,7 +535,7 @@ const TetMemoriesIntro = () => {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4 sm:pt-6 md:pt-8 animate-slideUp animation-delay-700 px-4">
           <button 
             onClick={() => setCurrentView("book")}
-            className="group relative w-full sm:w-auto inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-base sm:text-lg md:text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
+            className="group relative w-auto inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-base sm:text-lg md:text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
@@ -590,8 +602,13 @@ const TetMemoriesIntro = () => {
           <div className="space-y-2 sm:space-y-3 md:space-y-4">
             <TextParticles
               text="Nhìn Lại Kỷ Niệm"
-              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl tracking-wide pb-2 sm:pb-3 md:pb-4 lg:pb-6 px-2 sm:px-4 md:px-8"
-              style={{ fontFamily: "'Dancing Script', cursive", display: 'block' }}
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl tracking-wide pb-2 sm:pb-3 md:pb-4 lg:pb-6 px-2 sm:px-4 md:px-8 animate-text-glow"
+              style={{ 
+                fontFamily: "'Dancing Script', cursive", 
+                display: 'block',
+                textShadow: '0 0 20px rgba(255, 200, 100, 0.5), 0 0 40px rgba(255, 150, 80, 0.3), 0 0 60px rgba(255, 200, 100, 0.2)',
+                filter: 'drop-shadow(0 0 8px rgba(255, 200, 100, 0.4))'
+              }}
               delay={0.5}
             />
             <div className="flex justify-center gap-2 sm:gap-3">
@@ -602,8 +619,13 @@ const TetMemoriesIntro = () => {
           </div>
           <TextParticles
             text="Quay ngược thời gian, nhìn lại hành trình đẹp đẽ"
-            className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-yellow-100 font-light tracking-wider px-2 sm:px-4 md:px-8"
-            style={{ fontFamily: "'Dancing Script', cursive", display: 'block' }}
+            className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-yellow-100 font-light tracking-wider px-2 sm:px-4 md:px-8 animate-text-glow-subtle"
+            style={{ 
+              fontFamily: "'Dancing Script', cursive", 
+              display: 'block',
+              textShadow: '0 0 15px rgba(255, 200, 100, 0.4), 0 0 30px rgba(255, 150, 80, 0.2)',
+              filter: 'drop-shadow(0 0 6px rgba(255, 200, 100, 0.3))'
+            }}
             delay={1.2}
           />
         </div>
@@ -652,6 +674,34 @@ const TetMemoriesIntro = () => {
           10% { opacity: 1; }
           90% { opacity: 1; }
           100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+        
+        @keyframes textGlow {
+          0%, 100% { 
+            text-shadow: 0 0 20px rgba(255, 200, 100, 0.5), 
+                         0 0 40px rgba(255, 150, 80, 0.3), 
+                         0 0 60px rgba(255, 200, 100, 0.2);
+            filter: drop-shadow(0 0 8px rgba(255, 200, 100, 0.4));
+          }
+          50% { 
+            text-shadow: 0 0 30px rgba(255, 220, 120, 0.6), 
+                         0 0 50px rgba(255, 180, 100, 0.4), 
+                         0 0 70px rgba(255, 220, 120, 0.3);
+            filter: drop-shadow(0 0 12px rgba(255, 220, 120, 0.5));
+          }
+        }
+        
+        @keyframes textGlowSubtle {
+          0%, 100% { 
+            text-shadow: 0 0 15px rgba(255, 200, 100, 0.4), 
+                         0 0 30px rgba(255, 150, 80, 0.2);
+            filter: drop-shadow(0 0 6px rgba(255, 200, 100, 0.3));
+          }
+          50% { 
+            text-shadow: 0 0 20px rgba(255, 220, 120, 0.5), 
+                         0 0 35px rgba(255, 180, 100, 0.3);
+            filter: drop-shadow(0 0 8px rgba(255, 220, 120, 0.4));
+          }
         }
         
         .animate-fadeIn {
@@ -725,6 +775,14 @@ const TetMemoriesIntro = () => {
         
         .animate-fall {
           animation: fall linear infinite;
+        }
+        
+        .animate-text-glow {
+          animation: textGlow 3s ease-in-out infinite;
+        }
+        
+        .animate-text-glow-subtle {
+          animation: textGlowSubtle 4s ease-in-out infinite;
         }
         
         .border-3 {
