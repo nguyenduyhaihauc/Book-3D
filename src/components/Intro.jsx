@@ -508,8 +508,7 @@ const TetMemoriesIntro = () => {
           className="text-xl text-orange-100/90 max-w-3xl mx-auto leading-relaxed animate-slideUp animation-delay-500 font-light"
           style={{ fontFamily: "'Dancing Script', cursive" }}
         >
-          Thời gian quay ngược, mang theo bao kỷ niệm ấm áp của những ngày Tết xưa cũ.
-          Tiếng pháo nổ, mùi bánh chưng, và nụ cười sum họp bên gia đình.
+          Dòng thời gian lặng lẽ quay ngược, mang theo tiếng cười, yêu thương và những kỷ niệm đẹp đã làm nên một năm trọn vẹn và đáng nhớ.
         </p>
         
         <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8 animate-slideUp animation-delay-700">
@@ -519,7 +518,7 @@ const TetMemoriesIntro = () => {
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             <span className="relative z-10 flex items-center gap-3">
-              Xem kỷ niệm Tết
+              Xem kỷ niệm
               <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
