@@ -439,7 +439,7 @@ const TetMemoriesIntro = () => {
       timeRef.current = currentTime - startTime;
       
       // Trigger transition
-      if (timeRef.current >= 7000 && !transition) {
+      if (timeRef.current >= 5000 && !transition) {
         setTransition(true);
         setTimeout(() => setShowNextPage(true), 1000);
       }
