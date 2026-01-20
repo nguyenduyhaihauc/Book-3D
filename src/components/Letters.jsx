@@ -247,7 +247,7 @@ export const Letters = () => {
         <div className="w-full h-full flex items-center justify-center p-4">
           <div
             ref={letterContainerRef}
-            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 max-h-[90vh] overflow-y-auto border border-white/20 scrollbar-hide"
+            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 min-h-[500px] max-h-[70vh] overflow-y-auto border border-white/20 scrollbar-hide"
             style={{
               background:
                 "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))",
