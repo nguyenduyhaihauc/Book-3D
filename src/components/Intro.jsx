@@ -393,9 +393,12 @@ const TetMemoriesIntro = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
     
-    // Initialize particles
+    // Initialize particles - Responsive count based on screen size
     const Particle = createParticle;
-    particlesRef.current = Array.from({ length: 150 }, (_, i) => new Particle(i));
+    const isMobile = window.innerWidth < 640;
+    const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+    const particleCount = isMobile ? 80 : isTablet ? 120 : 150;
+    particlesRef.current = Array.from({ length: particleCount }, (_, i) => new Particle(i));
     
     let lastTime = performance.now();
     const startTime = performance.now();
@@ -464,6 +467,12 @@ const TetMemoriesIntro = () => {
     const handleResize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
+      
+      // Reinitialize particles with appropriate count for new screen size
+      const isMobile = window.innerWidth < 640;
+      const isTablet = window.innerWidth >= 640 && window.innerWidth < 1024;
+      const particleCount = isMobile ? 80 : isTablet ? 120 : 150;
+      particlesRef.current = Array.from({ length: particleCount }, (_, i) => new Particle(i));
     };
     
     window.addEventListener('resize', handleResize);
@@ -477,49 +486,49 @@ const TetMemoriesIntro = () => {
   // Warm landing page
   const NextPage = () => (
     <div className="w-full h-screen bg-gradient-to-br from-amber-900 via-red-900 to-orange-900 flex items-center justify-center overflow-hidden relative">
-      {/* Decorative elements */}
+      {/* Decorative elements - Responsive sizes */}
       <div className="absolute inset-0 opacity-10">
-        <div className="absolute top-10 left-10 w-32 h-32 border-4 border-yellow-400 rounded-full animate-float-slow"></div>
-        <div className="absolute bottom-20 right-20 w-24 h-24 border-4 border-red-400 rounded-full animate-float-slow" style={{animationDelay: '1s'}}></div>
-        <div className="absolute top-1/3 right-1/4 w-16 h-16 border-4 border-orange-400 rounded-full animate-float-slow" style={{animationDelay: '2s'}}></div>
+        <div className="absolute top-4 left-4 sm:top-6 sm:left-6 md:top-10 md:left-10 w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32 border-2 sm:border-3 md:border-4 border-yellow-400 rounded-full animate-float-slow"></div>
+        <div className="absolute bottom-10 right-10 sm:bottom-16 sm:right-16 md:bottom-20 md:right-20 w-12 h-12 sm:w-18 sm:h-18 md:w-24 md:h-24 border-2 sm:border-3 md:border-4 border-red-400 rounded-full animate-float-slow" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-1/3 right-1/4 w-8 h-8 sm:w-12 sm:h-12 md:w-16 md:h-16 border-2 sm:border-3 md:border-4 border-orange-400 rounded-full animate-float-slow" style={{animationDelay: '2s'}}></div>
       </div>
 
-      <div className="relative z-10 text-center space-y-10 px-8 max-w-5xl">
-        <div className="space-y-6 animate-slideUp">
+      <div className="relative z-10 text-center space-y-4 sm:space-y-6 md:space-y-8 lg:space-y-10 px-4 sm:px-6 md:px-8 max-w-5xl mx-auto">
+        <div className="space-y-3 sm:space-y-4 md:space-y-6 animate-slideUp">
           <div className="inline-block">
             <h1 
-              className="text-7xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-4 pr-8 md:pr-12"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-2 sm:mb-3 md:mb-4 px-2 sm:px-4 md:px-8"
               style={{ fontFamily: "'Dancing Script', cursive" }}
             >
               Tết Đến Xuân Về
             </h1>
-            <div className="h-1.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expand"></div>
+            <div className="h-0.5 sm:h-1 md:h-1.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expand"></div>
           </div>
         </div>
         
         <p 
-          className="text-3xl md:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed"
+          className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed px-4 sm:px-6"
           style={{ fontFamily: "'Dancing Script', cursive" }}
         >
           Những kỷ niệm đẹp năm vừa qua
         </p>
         
         <p 
-          className="text-xl text-orange-100/90 max-w-3xl mx-auto leading-relaxed animate-slideUp animation-delay-500 font-light"
+          className="text-sm sm:text-base md:text-lg lg:text-xl text-orange-100/90 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed sm:leading-loose animate-slideUp animation-delay-500 font-light px-4 sm:px-6"
           style={{ fontFamily: "'Dancing Script', cursive" }}
         >
           Dòng thời gian lặng lẽ quay ngược, mang theo tiếng cười, yêu thương và những kỷ niệm đẹp đã làm nên một năm trọn vẹn và đáng nhớ.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8 animate-slideUp animation-delay-700">
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4 sm:pt-6 md:pt-8 animate-slideUp animation-delay-700 px-4">
           <button 
             onClick={() => setCurrentView("book")}
-            className="group relative w-auto inline-block px-12 py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
+            className="group relative w-full sm:w-auto inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-base sm:text-lg md:text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
-            <span className="relative z-10 flex items-center gap-3">
+            <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
               Xem kỷ niệm
-              <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </span>
@@ -528,9 +537,9 @@ const TetMemoriesIntro = () => {
         </div>
       </div>
 
-      {/* Floating petals */}
+      {/* Floating petals - Responsive count */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(15)].map((_, i) => (
+        {[...Array(10)].map((_, i) => (
           <div
             key={i}
             className="absolute animate-fall"
@@ -542,7 +551,7 @@ const TetMemoriesIntro = () => {
             }}
           >
             <div 
-              className="w-3 h-3 rounded-full bg-gradient-to-br from-red-300 to-pink-400 opacity-60"
+              className="w-2 h-2 sm:w-2.5 sm:h-2.5 md:w-3 md:h-3 rounded-full bg-gradient-to-br from-red-300 to-pink-400 opacity-60"
               style={{
                 transform: `rotate(${Math.random() * 360}deg)`
               }}
@@ -571,29 +580,29 @@ const TetMemoriesIntro = () => {
       
       {/* Gentle title overlay */}
       <div 
-        className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out"
+        className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out px-4 sm:px-6 md:px-8"
         style={{
           opacity: transition ? 0 : 1,
           transform: transition ? 'scale(0.8) translateY(-50px)' : 'scale(1) translateY(0)'
         }}
       >
-        <div className="text-center space-y-8 px-4">
-          <div className="space-y-4">
+        <div className="text-center space-y-4 sm:space-y-6 md:space-y-8 w-full max-w-6xl mx-auto">
+          <div className="space-y-2 sm:space-y-3 md:space-y-4">
             <TextParticles
-              text="Nhìn Lại Kỷ Niệm Đáng Nhớ"
-              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl tracking-wide pb-4 md:pb-6 pr-8 md:pr-12"
+              text="Nhìn Lại Kỷ Niệm"
+              className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl tracking-wide pb-2 sm:pb-3 md:pb-4 lg:pb-6 px-2 sm:px-4 md:px-8"
               style={{ fontFamily: "'Dancing Script', cursive", display: 'block' }}
               delay={0.5}
             />
-            <div className="flex justify-center gap-3">
-              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-red-400 to-transparent rounded-full animate-expandWidth"></div>
-              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.2s'}}></div>
-              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.4s'}}></div>
+            <div className="flex justify-center gap-2 sm:gap-3">
+              <div className="h-0.5 sm:h-1 w-12 sm:w-16 md:w-20 lg:w-24 bg-gradient-to-r from-transparent via-red-400 to-transparent rounded-full animate-expandWidth"></div>
+              <div className="h-0.5 sm:h-1 w-12 sm:w-16 md:w-20 lg:w-24 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.2s'}}></div>
+              <div className="h-0.5 sm:h-1 w-12 sm:w-16 md:w-20 lg:w-24 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.4s'}}></div>
             </div>
           </div>
           <TextParticles
             text="Quay ngược thời gian, nhìn lại hành trình đẹp đẽ"
-            className="text-2xl md:text-3xl text-yellow-100 font-light tracking-wider pr-8 md:pr-12"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl xl:text-3xl text-yellow-100 font-light tracking-wider px-2 sm:px-4 md:px-8"
             style={{ fontFamily: "'Dancing Script', cursive", display: 'block' }}
             delay={1.2}
           />
@@ -615,7 +624,7 @@ const TetMemoriesIntro = () => {
         @keyframes expandWidth {
           0% { width: 0; opacity: 0; }
           50% { opacity: 1; }
-          100% { width: 6rem; opacity: 1; }
+          100% { width: 100%; opacity: 1; }
         }
         
         @keyframes slideUp {
@@ -652,6 +661,25 @@ const TetMemoriesIntro = () => {
         .animate-expandWidth {
           animation: expandWidth 1.8s ease-out forwards;
           width: 0;
+          max-width: 6rem;
+        }
+        
+        @media (min-width: 640px) {
+          .animate-expandWidth {
+            max-width: 4rem;
+          }
+        }
+        
+        @media (min-width: 768px) {
+          .animate-expandWidth {
+            max-width: 5rem;
+          }
+        }
+        
+        @media (min-width: 1024px) {
+          .animate-expandWidth {
+            max-width: 6rem;
+          }
         }
         
         .animation-delay-700 {
