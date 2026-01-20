@@ -300,26 +300,37 @@ const TetMemoriesIntro = () => {
       <div className="relative z-10 text-center space-y-10 px-8 max-w-5xl">
         <div className="space-y-6 animate-slideUp">
           <div className="inline-block">
-            <h1 className="text-7xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-4">
+            <h1 
+              className="text-7xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-4 pr-8 md:pr-12"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
               Tết Đến Xuân Về
             </h1>
             <div className="h-1.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expand"></div>
           </div>
         </div>
         
-        <p className="text-3xl md:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed">
-          Những kỷ niệm Tết năm cũ
+        <p 
+          className="text-3xl md:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed"
+          style={{ fontFamily: "'Dancing Script', cursive" }}
+        >
+          Những kỷ niệm đẹp năm vừa qua
         </p>
         
-        <p className="text-xl text-orange-100/90 max-w-3xl mx-auto leading-relaxed animate-slideUp animation-delay-500 font-light">
+        <p 
+          className="text-xl text-orange-100/90 max-w-3xl mx-auto leading-relaxed animate-slideUp animation-delay-500 font-light"
+          style={{ fontFamily: "'Dancing Script', cursive" }}
+        >
           Thời gian quay ngược, mang theo bao kỷ niệm ấm áp của những ngày Tết xưa cũ.
           Tiếng pháo nổ, mùi bánh chưng, và nụ cười sum họp bên gia đình.
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 animate-slideUp animation-delay-700">
+        <div className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8 animate-slideUp animation-delay-700">
           <button 
             onClick={() => setCurrentView("book")}
-            className="group relative px-12 py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95">
+            className="group relative w-auto inline-block px-12 py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
             <span className="relative z-10 flex items-center gap-3">
               Xem kỷ niệm Tết
               <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -328,22 +339,6 @@ const TetMemoriesIntro = () => {
             </span>
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
           </button>
-          
-          <button className="px-12 py-5 bg-transparent border-3 border-yellow-400/60 text-yellow-100 text-xl font-semibold rounded-full transition-all duration-500 hover:bg-yellow-400/20 hover:border-yellow-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-yellow-400/30">
-            Khám phá thêm
-          </button>
-        </div>
-
-        {/* Decorative lanterns */}
-        <div className="flex justify-center gap-8 pt-12 animate-slideUp animation-delay-900">
-          {[0, 1, 2].map((i) => (
-            <div key={i} className="relative w-16 h-20 animate-swing" style={{animationDelay: `${i * 0.3}s`}}>
-              <div className="absolute inset-0 bg-gradient-to-b from-red-500 to-red-700 rounded-lg shadow-lg shadow-red-500/50"></div>
-              <div className="absolute inset-2 bg-gradient-to-b from-yellow-400 to-orange-500 rounded opacity-60"></div>
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-1 h-4 bg-yellow-400"></div>
-              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-3 h-3 bg-yellow-300 rounded-full" style={{marginTop: '16px'}}></div>
-            </div>
-          ))}
         </div>
       </div>
 
@@ -398,8 +393,11 @@ const TetMemoriesIntro = () => {
       >
         <div className="text-center space-y-8 px-4">
           <div className="space-y-4">
-            <h1 className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl animate-fadeIn tracking-wide">
-              Kỷ Niệm Tết
+            <h1 
+              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl animate-fadeIn tracking-wide"
+              style={{ fontFamily: "'Dancing Script', cursive" }}
+            >
+              Nhìn Lại Kỷ Niệm Đáng Nhớ
             </h1>
             <div className="flex justify-center gap-3">
               <div className="h-1 w-24 bg-gradient-to-r from-transparent via-red-400 to-transparent rounded-full animate-expandWidth"></div>
@@ -407,8 +405,11 @@ const TetMemoriesIntro = () => {
               <div className="h-1 w-24 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.4s'}}></div>
             </div>
           </div>
-          <p className="text-2xl md:text-3xl text-yellow-100 font-light animate-fadeIn animation-delay-700 tracking-wider">
-            Quay ngược thời gian, tìm lại ký ức...
+          <p 
+            className="text-2xl md:text-3xl text-yellow-100 font-light animate-fadeIn animation-delay-700 tracking-wider"
+            style={{ fontFamily: "'Dancing Script', cursive" }}
+          >
+            Quay ngược thời gian, nhìn lại hành trình đẹp đẽ
           </p>
         </div>
       </div>
