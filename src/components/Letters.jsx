@@ -8,11 +8,31 @@ export const Letters = () => {
   const [showSignature, setShowSignature] = useState(false);
   const [showFireworksIcon, setShowFireworksIcon] = useState(false);
   const [showFireworks, setShowFireworks] = useState(false);
+  const [deviceType, setDeviceType] = useState('desktop'); // 'mobile', 'tablet', 'desktop'
   const letterContainerRef = useRef(null);
   const titleRef = useRef(null);
   const contentRef = useRef(null);
   const signatureRef = useRef(null);
   const fireworksIconRef = useRef(null);
+
+  // Kiểm tra kích thước màn hình
+  useEffect(() => {
+    const checkDeviceType = () => {
+      const width = window.innerWidth;
+      if (width < 640) {
+        setDeviceType('mobile'); // < 640px: điện thoại
+      } else if (width >= 640 && width < 1024) {
+        setDeviceType('tablet'); // 640px - 1024px: iPad
+      } else {
+        setDeviceType('desktop'); // >= 1024px: laptop/desktop
+      }
+    };
+
+    checkDeviceType();
+    window.addEventListener('resize', checkDeviceType);
+
+    return () => window.removeEventListener('resize', checkDeviceType);
+  }, []);
 
   const title = "Gửi Tới Em Người Anh Yêu";
   const content = `Em à,
@@ -159,11 +179,24 @@ export const Letters = () => {
     ));
   };
 
+  // Chọn background dựa trên loại thiết bị
+  const getBackgroundImage = () => {
+    switch (deviceType) {
+      case 'mobile':
+        return "url('/images/Bg_thu_dien_thoai.png')";
+      case 'tablet':
+        return "url('/images/Bg_thu_ipad.png')";
+      case 'desktop':
+      default:
+        return "url('/images/Bg_thu_tet.png')";
+    }
+  };
+
   return (
     <div
       className="fixed inset-0 flex items-center justify-center overflow-hidden"
       style={{
-        backgroundImage: "url('/images/Bg_thu_tet.png')",
+        backgroundImage: getBackgroundImage(),
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
