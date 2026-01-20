@@ -1,7 +1,7 @@
 import { atom, useAtom } from "jotai";
 import { useEffect, useState } from "react";
 
-export const currentViewAtom = atom("book"); // "book" hoặc "letters"
+export const currentViewAtom = atom("intro"); // "intro", "book" hoặc "letters"
 
 // List ảnh trong sach
 const pictures = [

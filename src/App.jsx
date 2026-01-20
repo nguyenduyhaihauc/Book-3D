@@ -5,6 +5,7 @@ import { useAtom } from "jotai";
 import { Experience } from "./components/Experience";
 import { UI, currentViewAtom } from "./components/UI";
 import { Letters } from "./components/Letters";
+import TetMemoriesIntro from "./components/Intro";
 
 function App() {
   const [currentView] = useAtom(currentViewAtom);
@@ -23,6 +24,7 @@ function App() {
 
   return (
     <>
+      {currentView === "intro" && <TetMemoriesIntro />}
       {currentView === "book" && (
         <>
           <UI />

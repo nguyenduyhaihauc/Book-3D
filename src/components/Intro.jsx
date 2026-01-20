@@ -1,0 +1,523 @@
+import React, { useState, useEffect, useRef, useMemo } from 'react';
+import { useAtom } from 'jotai';
+import { currentViewAtom } from './UI';
+
+const TetMemoriesIntro = () => {
+  const [transition, setTransition] = useState(false);
+  const [showNextPage, setShowNextPage] = useState(false);
+  const [, setCurrentView] = useAtom(currentViewAtom);
+  const canvasRef = useRef(null);
+  const rafRef = useRef(null);
+  const particlesRef = useRef([]);
+  const timeRef = useRef(0);
+
+  // Optimized particle class for Tet memories
+  const createParticle = useMemo(() => {
+    return class Particle {
+      constructor(index) {
+        this.index = index;
+        this.reset();
+      }
+
+      reset() {
+        // Soft depth for gentle motion
+        this.z = Math.random() * 1500 + 300;
+        
+        // Circular gentle flow pattern
+        const angle = Math.random() * Math.PI * 2;
+        const radius = Math.random() * 800 + 200;
+        
+        this.angle = angle;
+        this.radius = radius;
+        this.x = Math.cos(angle) * radius;
+        this.y = Math.sin(angle) * radius;
+        
+        // Gentle velocity
+        this.speed = 0.3 + Math.random() * 0.4;
+        this.size = Math.random() * 3 + 1;
+        this.brightness = Math.random() * 0.6 + 0.4;
+        
+        // Tet colors: red, gold, orange
+        const colorChoice = Math.random();
+        if (colorChoice < 0.4) {
+          this.color = { r: 255, g: 80, b: 80 }; // Red
+        } else if (colorChoice < 0.7) {
+          this.color = { r: 255, g: 200, b: 80 }; // Gold
+        } else {
+          this.color = { r: 255, g: 150, b: 80 }; // Orange
+        }
+        
+        this.type = Math.random();
+        this.floatOffset = Math.random() * Math.PI * 2;
+        this.rotationSpeed = (Math.random() - 0.5) * 0.02;
+        this.rotation = Math.random() * Math.PI * 2;
+      }
+
+      update(deltaTime, globalTime) {
+        // Gentle reverse motion
+        const speed = this.speed * deltaTime * 30;
+        this.z += speed * 1.2;
+        
+        // Soft circular motion
+        this.angle += this.rotationSpeed;
+        
+        // Floating motion like memories drifting
+        const float = Math.sin(globalTime * 0.0005 + this.floatOffset) * 20;
+        this.x = Math.cos(this.angle) * this.radius + float;
+        this.y = Math.sin(this.angle) * this.radius + Math.cos(globalTime * 0.0003 + this.floatOffset) * 15;
+        
+        this.rotation += this.rotationSpeed;
+        
+        // Reset when too close
+        if (this.z > 1800) {
+          this.reset();
+        }
+      }
+
+      draw(ctx, width, height, globalTime) {
+        const perspective = 800;
+        const scale = perspective / (perspective + this.z);
+        
+        if (scale <= 0) return;
+        
+        const x2d = this.x * scale + width / 2;
+        const y2d = this.y * scale + height / 2;
+        
+        // Culling
+        if (x2d < -100 || x2d > width + 100 || y2d < -100 || y2d > height + 100) return;
+        
+        const depth = 1 - (this.z / 1800);
+        const size = this.size * scale * 2.5;
+        const pulse = 0.85 + Math.sin(globalTime * 0.002 + this.floatOffset) * 0.15;
+        const alpha = this.brightness * depth * pulse;
+        
+        ctx.save();
+        ctx.translate(x2d, y2d);
+        ctx.rotate(this.rotation);
+        
+        // Different shapes for Tet elements
+        if (this.type < 0.3) {
+          // Peach blossom petals
+          this.drawPetal(ctx, size, alpha);
+        } else if (this.type < 0.6) {
+          // Lucky coins
+          this.drawCoin(ctx, size, alpha);
+        } else if (this.type < 0.85) {
+          // Soft light orbs (lanterns)
+          this.drawLantern(ctx, size, alpha);
+        } else {
+          // Gentle sparkles
+          this.drawSparkle(ctx, size, alpha);
+        }
+        
+        ctx.restore();
+      }
+
+      drawPetal(ctx, size, alpha) {
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 2);
+        gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.8})`);
+        gradient.addColorStop(0.7, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.4})`);
+        gradient.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        for (let i = 0; i < 5; i++) {
+          const angle = (i / 5) * Math.PI * 2;
+          const x = Math.cos(angle) * size * 1.5;
+          const y = Math.sin(angle) * size * 1.5;
+          if (i === 0) ctx.moveTo(x, y);
+          else ctx.lineTo(x, y);
+        }
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      drawCoin(ctx, size, alpha) {
+        // Outer glow
+        const outerGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 3);
+        outerGlow.addColorStop(0, `rgba(255, 215, 0, ${alpha * 0.3})`);
+        outerGlow.addColorStop(1, 'rgba(255, 215, 0, 0)');
+        ctx.fillStyle = outerGlow;
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 3, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Coin body
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size);
+        gradient.addColorStop(0, `rgba(255, 220, 100, ${alpha})`);
+        gradient.addColorStop(0.7, `rgba(255, 200, 80, ${alpha * 0.9})`);
+        gradient.addColorStop(1, `rgba(200, 150, 50, ${alpha * 0.7})`);
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, size, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Inner detail
+        ctx.strokeStyle = `rgba(200, 150, 50, ${alpha * 0.6})`;
+        ctx.lineWidth = size * 0.1;
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+
+      drawLantern(ctx, size, alpha) {
+        const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, size * 4);
+        gradient.addColorStop(0, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.6})`);
+        gradient.addColorStop(0.3, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.4})`);
+        gradient.addColorStop(0.6, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, ${alpha * 0.2})`);
+        gradient.addColorStop(1, `rgba(${this.color.r}, ${this.color.g}, ${this.color.b}, 0)`);
+        
+        ctx.fillStyle = gradient;
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 4, 0, Math.PI * 2);
+        ctx.fill();
+        
+        // Core
+        ctx.fillStyle = `rgba(255, 255, 200, ${alpha * 0.8})`;
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.8, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      drawSparkle(ctx, size, alpha) {
+        ctx.strokeStyle = `rgba(255, 220, 150, ${alpha})`;
+        ctx.lineWidth = size * 0.3;
+        ctx.lineCap = 'round';
+        
+        for (let i = 0; i < 4; i++) {
+          ctx.save();
+          ctx.rotate((i / 4) * Math.PI * 2);
+          ctx.beginPath();
+          ctx.moveTo(0, -size * 1.5);
+          ctx.lineTo(0, size * 1.5);
+          ctx.stroke();
+          ctx.restore();
+        }
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d', { alpha: false });
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    
+    // Initialize particles
+    const Particle = createParticle;
+    particlesRef.current = Array.from({ length: 150 }, (_, i) => new Particle(i));
+    
+    let lastTime = performance.now();
+    const startTime = performance.now();
+    
+    const animate = (currentTime) => {
+      const deltaTime = (currentTime - lastTime) / 1000;
+      lastTime = currentTime;
+      timeRef.current = currentTime - startTime;
+      
+      // Trigger transition
+      if (timeRef.current >= 8000 && !transition) {
+        setTransition(true);
+        setTimeout(() => setShowNextPage(true), 1000);
+      }
+      
+      const { width, height } = canvas;
+      
+      // Warm gradient background
+      const bgGradient = ctx.createRadialGradient(
+        width / 2, height / 2, 0,
+        width / 2, height / 2, Math.max(width, height) * 0.7
+      );
+      bgGradient.addColorStop(0, '#2d1810');
+      bgGradient.addColorStop(0.5, '#1a0e08');
+      bgGradient.addColorStop(1, '#0a0503');
+      ctx.fillStyle = bgGradient;
+      ctx.fillRect(0, 0, width, height);
+      
+      // Soft ambient light
+      const ambientGlow = ctx.createRadialGradient(
+        width / 2, height / 2, 0,
+        width / 2, height / 2, width * 0.5
+      );
+      ambientGlow.addColorStop(0, 'rgba(255, 150, 80, 0.08)');
+      ambientGlow.addColorStop(0.5, 'rgba(255, 100, 50, 0.04)');
+      ambientGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = ambientGlow;
+      ctx.fillRect(0, 0, width, height);
+      
+      // Sort and draw particles
+      particlesRef.current.sort((a, b) => b.z - a.z);
+      
+      particlesRef.current.forEach(particle => {
+        particle.update(deltaTime, timeRef.current);
+        particle.draw(ctx, width, height, timeRef.current);
+      });
+      
+      // Soft central glow (warm memories gathering)
+      const centralGlow = ctx.createRadialGradient(
+        width / 2, height / 2, 0,
+        width / 2, height / 2, 200 + Math.sin(timeRef.current * 0.001) * 30
+      );
+      centralGlow.addColorStop(0, 'rgba(255, 200, 100, 0.12)');
+      centralGlow.addColorStop(0.5, 'rgba(255, 150, 80, 0.06)');
+      centralGlow.addColorStop(1, 'rgba(255, 100, 50, 0)');
+      ctx.fillStyle = centralGlow;
+      ctx.beginPath();
+      ctx.arc(width / 2, height / 2, 200 + Math.sin(timeRef.current * 0.001) * 30, 0, Math.PI * 2);
+      ctx.fill();
+      
+      rafRef.current = requestAnimationFrame(animate);
+    };
+    
+    rafRef.current = requestAnimationFrame(animate);
+    
+    const handleResize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    };
+    
+    window.addEventListener('resize', handleResize);
+    
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [transition, createParticle]);
+
+  // Warm landing page
+  const NextPage = () => (
+    <div className="w-full h-screen bg-gradient-to-br from-amber-900 via-red-900 to-orange-900 flex items-center justify-center overflow-hidden relative">
+      {/* Decorative elements */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute top-10 left-10 w-32 h-32 border-4 border-yellow-400 rounded-full animate-float-slow"></div>
+        <div className="absolute bottom-20 right-20 w-24 h-24 border-4 border-red-400 rounded-full animate-float-slow" style={{animationDelay: '1s'}}></div>
+        <div className="absolute top-1/3 right-1/4 w-16 h-16 border-4 border-orange-400 rounded-full animate-float-slow" style={{animationDelay: '2s'}}></div>
+      </div>
+
+      <div className="relative z-10 text-center space-y-10 px-8 max-w-5xl">
+        <div className="space-y-6 animate-slideUp">
+          <div className="inline-block">
+            <h1 className="text-7xl md:text-9xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-yellow-200 via-red-300 to-orange-200 tracking-tight mb-4">
+              Tết Đến Xuân Về
+            </h1>
+            <div className="h-1.5 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expand"></div>
+          </div>
+        </div>
+        
+        <p className="text-3xl md:text-4xl text-yellow-100 font-light animate-slideUp animation-delay-300 leading-relaxed">
+          Những kỷ niệm Tết năm cũ
+        </p>
+        
+        <p className="text-xl text-orange-100/90 max-w-3xl mx-auto leading-relaxed animate-slideUp animation-delay-500 font-light">
+          Thời gian quay ngược, mang theo bao kỷ niệm ấm áp của những ngày Tết xưa cũ.
+          Tiếng pháo nổ, mùi bánh chưng, và nụ cười sum họp bên gia đình.
+        </p>
+        
+        <div className="flex flex-col sm:flex-row gap-6 justify-center pt-8 animate-slideUp animation-delay-700">
+          <button 
+            onClick={() => setCurrentView("book")}
+            className="group relative px-12 py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95">
+            <span className="relative z-10 flex items-center gap-3">
+              Xem kỷ niệm Tết
+              <svg className="w-6 h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+              </svg>
+            </span>
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+          </button>
+          
+          <button className="px-12 py-5 bg-transparent border-3 border-yellow-400/60 text-yellow-100 text-xl font-semibold rounded-full transition-all duration-500 hover:bg-yellow-400/20 hover:border-yellow-300 hover:scale-105 active:scale-95 hover:shadow-lg hover:shadow-yellow-400/30">
+            Khám phá thêm
+          </button>
+        </div>
+
+        {/* Decorative lanterns */}
+        <div className="flex justify-center gap-8 pt-12 animate-slideUp animation-delay-900">
+          {[0, 1, 2].map((i) => (
+            <div key={i} className="relative w-16 h-20 animate-swing" style={{animationDelay: `${i * 0.3}s`}}>
+              <div className="absolute inset-0 bg-gradient-to-b from-red-500 to-red-700 rounded-lg shadow-lg shadow-red-500/50"></div>
+              <div className="absolute inset-2 bg-gradient-to-b from-yellow-400 to-orange-500 rounded opacity-60"></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-1 h-4 bg-yellow-400"></div>
+              <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full w-3 h-3 bg-yellow-300 rounded-full" style={{marginTop: '16px'}}></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Floating petals */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute animate-fall"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `-5%`,
+              animationDelay: `${Math.random() * 8}s`,
+              animationDuration: `${12 + Math.random() * 8}s`,
+            }}
+          >
+            <div 
+              className="w-3 h-3 rounded-full bg-gradient-to-br from-red-300 to-pink-400 opacity-60"
+              style={{
+                transform: `rotate(${Math.random() * 360}deg)`
+              }}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (showNextPage) {
+    return <NextPage />;
+  }
+
+  return (
+    <div className="relative w-full h-screen overflow-hidden bg-black">
+      <canvas 
+        ref={canvasRef} 
+        className="absolute inset-0 transition-all duration-1000 ease-out"
+        style={{
+          opacity: transition ? 0 : 1,
+          transform: transition ? 'scale(1.15)' : 'scale(1)',
+          filter: transition ? 'blur(15px)' : 'blur(0px)'
+        }}
+      />
+      
+      {/* Gentle title overlay */}
+      <div 
+        className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-1000 ease-out"
+        style={{
+          opacity: transition ? 0 : 1,
+          transform: transition ? 'scale(0.8) translateY(-50px)' : 'scale(1) translateY(0)'
+        }}
+      >
+        <div className="text-center space-y-8 px-4">
+          <div className="space-y-4">
+            <h1 className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl animate-fadeIn tracking-wide">
+              Kỷ Niệm Tết
+            </h1>
+            <div className="flex justify-center gap-3">
+              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-red-400 to-transparent rounded-full animate-expandWidth"></div>
+              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.2s'}}></div>
+              <div className="h-1 w-24 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.4s'}}></div>
+            </div>
+          </div>
+          <p className="text-2xl md:text-3xl text-yellow-100 font-light animate-fadeIn animation-delay-700 tracking-wider">
+            Quay ngược thời gian, tìm lại ký ức...
+          </p>
+        </div>
+      </div>
+      
+      {/* Warm fade transition */}
+      <div 
+        className="absolute inset-0 bg-gradient-to-br from-orange-200 via-red-200 to-yellow-200 pointer-events-none transition-opacity duration-1000"
+        style={{ opacity: transition ? 0.4 : 0 }}
+      />
+
+      <style jsx>{`
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(30px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes expandWidth {
+          0% { width: 0; opacity: 0; }
+          50% { opacity: 1; }
+          100% { width: 6rem; opacity: 1; }
+        }
+        
+        @keyframes slideUp {
+          from { opacity: 0; transform: translateY(50px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes expand {
+          0% { width: 0; }
+          100% { width: 100%; }
+        }
+        
+        @keyframes float-slow {
+          0%, 100% { transform: translateY(0) rotate(0deg); }
+          50% { transform: translateY(-30px) rotate(180deg); }
+        }
+        
+        @keyframes swing {
+          0%, 100% { transform: rotate(-5deg); }
+          50% { transform: rotate(5deg); }
+        }
+        
+        @keyframes fall {
+          0% { transform: translateY(0) rotate(0deg); opacity: 0; }
+          10% { opacity: 1; }
+          90% { opacity: 1; }
+          100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+        }
+        
+        .animate-fadeIn {
+          animation: fadeIn 2s ease-out forwards;
+        }
+        
+        .animate-expandWidth {
+          animation: expandWidth 1.8s ease-out forwards;
+          width: 0;
+        }
+        
+        .animation-delay-700 {
+          animation-delay: 0.7s;
+          opacity: 0;
+        }
+        
+        .animate-slideUp {
+          animation: slideUp 1.2s ease-out forwards;
+        }
+        
+        .animation-delay-300 {
+          animation-delay: 0.3s;
+          opacity: 0;
+        }
+        
+        .animation-delay-500 {
+          animation-delay: 0.5s;
+          opacity: 0;
+        }
+        
+        .animation-delay-700 {
+          animation-delay: 0.7s;
+          opacity: 0;
+        }
+        
+        .animation-delay-900 {
+          animation-delay: 0.9s;
+          opacity: 0;
+        }
+        
+        .animate-expand {
+          animation: expand 1.5s ease-out forwards;
+        }
+        
+        .animate-float-slow {
+          animation: float-slow 6s ease-in-out infinite;
+        }
+        
+        .animate-swing {
+          animation: swing 3s ease-in-out infinite;
+        }
+        
+        .animate-fall {
+          animation: fall linear infinite;
+        }
+        
+        .border-3 {
+          border-width: 3px;
+        }
+      `}</style>
+    </div>
+  );
+};
+
+export default TetMemoriesIntro;
