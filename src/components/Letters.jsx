@@ -161,7 +161,7 @@ export const Letters = () => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center"
+      className="fixed inset-0 flex items-center justify-center overflow-hidden"
       style={{
         backgroundImage: "url('/images/Bg_thu_tet.png')",
         backgroundSize: "cover",
@@ -174,16 +174,16 @@ export const Letters = () => {
           {/* Ánh sáng xung quanh phong thư */}
           <div className="absolute inset-0 flex items-center justify-center">
             {/* Glow effect lớn */}
-            <div className="absolute w-96 h-96 rounded-full animate-envelope-glow-large"></div>
+            <div className="absolute w-64 h-64 md:w-80 md:h-80 lg:w-96 lg:h-96 rounded-full animate-envelope-glow-large"></div>
             {/* Glow effect nhỏ */}
-            <div className="absolute w-80 h-80 rounded-full animate-envelope-glow-small"></div>
+            <div className="absolute w-56 h-56 md:w-72 md:h-72 lg:w-80 lg:h-80 rounded-full animate-envelope-glow-small"></div>
 
             {/* Sparkles xung quanh */}
             {[...Array(16)].map((_, i) => {
               const angle = i * 22.5 * (Math.PI / 180);
-              const radius = 140;
-              const x = Math.cos(angle) * radius;
-              const y = Math.sin(angle) * radius;
+              const baseRadius = typeof window !== 'undefined' && window.innerWidth < 768 ? 100 : 140;
+              const x = Math.cos(angle) * baseRadius;
+              const y = Math.sin(angle) * baseRadius;
               const delay = i * 0.15;
               const colors = [
                 "#FFD700",
@@ -196,7 +196,7 @@ export const Letters = () => {
               return (
                 <div
                   key={i}
-                  className="absolute w-3 h-3 rounded-full animate-envelope-sparkle"
+                  className="absolute w-2 h-2 md:w-3 md:h-3 rounded-full animate-envelope-sparkle"
                   style={{
                     "--sparkle-x": `${x}px`,
                     "--sparkle-y": `${y}px`,
@@ -216,7 +216,7 @@ export const Letters = () => {
               return (
                 <div
                   key={`ray-${i}`}
-                  className="absolute w-1 h-40 animate-light-ray"
+                  className="absolute w-1 h-28 md:h-36 lg:h-40 animate-light-ray"
                   style={{
                     background:
                       "linear-gradient(to bottom, rgba(255, 215, 0, 0.3), transparent)",
@@ -234,7 +234,7 @@ export const Letters = () => {
             <img
               src="/images/phong_thu.png"
               alt="Phong thư"
-              className="w-48 h-48 md:w-64 md:h-64 cursor-pointer hover:scale-110 transition-transform duration-300 mx-auto animate-envelope-float"
+              className="w-36 h-36 sm:w-44 sm:h-44 md:w-56 md:h-56 lg:w-64 lg:h-64 cursor-pointer hover:scale-110 transition-transform duration-300 mx-auto animate-envelope-float"
               onClick={() => setShowLetter(true)}
               style={{
                 filter:
@@ -244,10 +244,10 @@ export const Letters = () => {
           </div>
         </div>
       ) : (
-        <div className="w-full h-full flex items-center justify-center p-4">
+        <div className="w-full h-full flex items-center justify-center p-2 sm:p-4 md:p-6">
           <div
             ref={letterContainerRef}
-            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl max-w-2xl w-full p-8 md:p-12 min-h-[500px] max-h-[70vh] overflow-y-auto border border-white/20 scrollbar-hide"
+            className="relative bg-white/10 backdrop-blur-xl rounded-lg shadow-2xl w-full max-w-sm sm:max-w-md md:max-w-lg lg:max-w-2xl p-4 sm:p-6 md:p-8 lg:p-12 h-auto min-h-[280px] sm:min-h-[320px] md:min-h-[400px] lg:min-h-[450px] max-h-[70vh] sm:max-h-[65vh] md:max-h-[70vh] lg:max-h-[70vh] overflow-y-auto border border-white/20 scrollbar-hide"
             style={{
               background:
                 "linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05))",
@@ -260,7 +260,10 @@ export const Letters = () => {
             {/* Nút đóng */}
             <button
               onClick={() => setShowLetter(false)}
-              className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold z-10"
+              className="absolute top-2 right-2 sm:top-3 sm:right-3 md:top-4 md:right-4 text-white hover:text-gray-300 text-3xl sm:text-4xl md:text-3xl font-bold z-10 w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center"
+              style={{
+                textShadow: "0 0 10px rgba(255, 215, 0, 0.8)"
+              }}
             >
               ×
             </button>
@@ -268,7 +271,7 @@ export const Letters = () => {
             {/* Tiêu đề màu vàng may mắn ở giữa */}
             <h1
               ref={titleRef}
-              className="text-center text-4xl md:text-5xl font-bold mb-8 animate-text-glow"
+              className="text-center text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 sm:mb-6 md:mb-8 animate-text-glow px-2"
               style={{
                 color: "#FFD700",
                 fontFamily: "Dancing Script",
@@ -286,7 +289,7 @@ export const Letters = () => {
             {displayedTitle === title && (
               <div
                 ref={contentRef}
-                className="text-lg md:text-xl leading-relaxed mb-8 whitespace-pre-line animate-text-glow-subtle"
+                className="text-base sm:text-lg md:text-xl lg:text-2xl leading-relaxed mb-4 sm:mb-6 md:mb-8 whitespace-pre-line animate-text-glow-subtle px-2"
                 style={{
                   color: "#FFE4B5",
                   fontFamily: "Dancing Script",
@@ -306,7 +309,7 @@ export const Letters = () => {
             {showSignature && (
               <div
                 ref={signatureRef}
-                className="text-right text-2xl md:text-3xl italic animate-fade-in animate-text-glow-subtle"
+                className="text-right text-lg sm:text-xl md:text-2xl lg:text-3xl italic animate-fade-in animate-text-glow-subtle px-2"
                 style={{
                   color: "#FFE4B5",
                   fontFamily: "Dancing Script",
@@ -316,7 +319,7 @@ export const Letters = () => {
               >
                 Gửi em thế giới nhỏ trong anh,
                 <br />
-                <span className="mt-2 inline-block">An Nguyễn</span>
+                <span className="mt-1 sm:mt-2 inline-block">An Nguyễn</span>
               </div>
             )}
 
@@ -324,25 +327,25 @@ export const Letters = () => {
             {showFireworksIcon && (
               <div
                 ref={fireworksIconRef}
-                className="flex justify-center mt-8 mb-4 animate-fade-in relative"
+                className="flex justify-center mt-4 sm:mt-6 md:mt-8 mb-2 sm:mb-3 md:mb-4 animate-fade-in relative px-2"
               >
                 {/* Ánh sáng xung quanh */}
                 <div className="absolute inset-0 flex items-center justify-center">
                   {/* Glow effect */}
-                  <div className="absolute w-20 h-20 md:w-24 md:h-24 rounded-full animate-glow-pulse"></div>
-                  <div className="absolute w-16 h-16 md:w-20 md:h-20 rounded-full animate-glow-pulse-delayed"></div>
+                  <div className="absolute w-16 h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 lg:w-24 lg:h-24 rounded-full animate-glow-pulse"></div>
+                  <div className="absolute w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 rounded-full animate-glow-pulse-delayed"></div>
 
                   {/* Sparkles */}
                   {[...Array(12)].map((_, i) => {
                     const angle = i * 30 * (Math.PI / 180);
-                    const radius = 30;
-                    const x = Math.cos(angle) * radius;
-                    const y = Math.sin(angle) * radius;
+                    const baseRadius = typeof window !== 'undefined' && window.innerWidth < 640 ? 22 : 30;
+                    const x = Math.cos(angle) * baseRadius;
+                    const y = Math.sin(angle) * baseRadius;
                     const delay = i * 0.1;
                     return (
                       <div
                         key={i}
-                        className="absolute w-1.5 h-1.5 rounded-full animate-sparkle"
+                        className="absolute w-1 h-1 sm:w-1.5 sm:h-1.5 rounded-full animate-sparkle"
                         style={{
                           "--sparkle-x": `${x}px`,
                           "--sparkle-y": `${y}px`,
@@ -367,7 +370,7 @@ export const Letters = () => {
                   <img
                     src="/images/fireworks.png"
                     alt="Fireworks"
-                    className="w-12 h-12 md:w-16 md:h-16 cursor-pointer animate-fireworks-magic hover:scale-110 transition-transform duration-300"
+                    className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 cursor-pointer animate-fireworks-magic hover:scale-110 active:scale-95 transition-transform duration-300"
                     onClick={() => {
                       setShowFireworks(true);
                     }}
