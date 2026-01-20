@@ -394,7 +394,7 @@ const TetMemoriesIntro = () => {
         <div className="text-center space-y-8 px-4">
           <div className="space-y-4">
             <h1 
-              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl animate-fadeIn tracking-wide"
+              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl animate-fadeIn tracking-wide pb-4 md:pb-6 pr-8 md:pr-12"
               style={{ fontFamily: "'Dancing Script', cursive" }}
             >
               Nhìn Lại Kỷ Niệm Đáng Nhớ
@@ -406,7 +406,7 @@ const TetMemoriesIntro = () => {
             </div>
           </div>
           <p 
-            className="text-2xl md:text-3xl text-yellow-100 font-light animate-fadeIn animation-delay-700 tracking-wider"
+            className="text-2xl md:text-3xl text-yellow-100 font-light animate-fadeIn animation-delay-700 tracking-wider pr-8 md:pr-12"
             style={{ fontFamily: "'Dancing Script', cursive" }}
           >
             Quay ngược thời gian, nhìn lại hành trình đẹp đẽ
