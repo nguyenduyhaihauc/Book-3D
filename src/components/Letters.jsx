@@ -163,7 +163,7 @@ export const Letters = () => {
     <div
       className="fixed inset-0 flex items-center justify-center"
       style={{
-        backgroundImage: "url('/images/bg_tet_1.jpg')",
+        backgroundImage: "url('/images/Bg_thu_tet.png')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
