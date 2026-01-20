@@ -535,16 +535,23 @@ const TetMemoriesIntro = () => {
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4 sm:pt-6 md:pt-8 animate-slideUp animation-delay-700 px-4">
           <button 
             onClick={() => setCurrentView("book")}
-            className="group relative w-auto inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-base sm:text-lg md:text-xl font-semibold rounded-full overflow-hidden transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95"
-            style={{ fontFamily: "'Dancing Script', cursive" }}
+            className="group relative w-auto inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-base sm:text-lg md:text-xl font-semibold rounded-full overflow-visible transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95 animate-button-glow"
+            style={{ 
+              fontFamily: "'Dancing Script', cursive",
+              boxShadow: '0 0 20px rgba(255, 100, 50, 0.4), 0 0 40px rgba(255, 150, 80, 0.3), 0 0 60px rgba(255, 200, 100, 0.2)',
+              filter: 'drop-shadow(0 0 8px rgba(255, 150, 80, 0.5))'
+            }}
           >
+            {/* Glow ring effect */}
+            <div className="absolute -inset-1 bg-gradient-to-r from-yellow-400 via-red-500 to-orange-500 rounded-full opacity-30 blur-md group-hover:opacity-50 group-active:opacity-50 transition-opacity duration-500 -z-10 animate-button-glow-ring"></div>
+            
             <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3">
               Xem kỷ niệm
               <svg className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 group-hover:translate-x-2 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </span>
-            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-full"></div>
           </button>
         </div>
       </div>
@@ -783,6 +790,40 @@ const TetMemoriesIntro = () => {
         
         .animate-text-glow-subtle {
           animation: textGlowSubtle 4s ease-in-out infinite;
+        }
+        
+        @keyframes buttonGlow {
+          0%, 100% { 
+            box-shadow: 0 0 20px rgba(255, 100, 50, 0.4), 
+                         0 0 40px rgba(255, 150, 80, 0.3), 
+                         0 0 60px rgba(255, 200, 100, 0.2);
+            filter: drop-shadow(0 0 8px rgba(255, 150, 80, 0.5));
+          }
+          50% { 
+            box-shadow: 0 0 30px rgba(255, 150, 80, 0.6), 
+                         0 0 50px rgba(255, 200, 100, 0.4), 
+                         0 0 70px rgba(255, 220, 120, 0.3);
+            filter: drop-shadow(0 0 12px rgba(255, 200, 100, 0.6));
+          }
+        }
+        
+        @keyframes buttonGlowRing {
+          0%, 100% { 
+            opacity: 0.3;
+            transform: scale(1);
+          }
+          50% { 
+            opacity: 0.5;
+            transform: scale(1.05);
+          }
+        }
+        
+        .animate-button-glow {
+          animation: buttonGlow 3s ease-in-out infinite;
+        }
+        
+        .animate-button-glow-ring {
+          animation: buttonGlowRing 2s ease-in-out infinite;
         }
         
         .border-3 {
