@@ -2,6 +2,193 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { currentViewAtom } from './UI';
 
+// Component tạo hiệu ứng particles gộp thành chữ
+const TextParticles = ({ text, className, style, delay = 0 }) => {
+  const canvasRef = useRef(null);
+  const textRef = useRef(null);
+  const particlesRef = useRef([]);
+  const animationRef = useRef(null);
+  const [isComplete, setIsComplete] = useState(false);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    const textElement = textRef.current;
+    const container = containerRef.current;
+    if (!canvas || !text || !textElement || !container) return;
+
+    const updateCanvas = () => {
+      const rect = container.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = rect.width * dpr;
+      canvas.height = rect.height * dpr;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.scale(dpr, dpr);
+      
+      return ctx;
+    };
+
+    const ctx = updateCanvas();
+    
+    // Lấy font size từ computed style
+    const computedStyle = window.getComputedStyle(textElement);
+    const fontSize = parseFloat(computedStyle.fontSize);
+    const fontFamily = computedStyle.fontFamily;
+    
+    // Tạo particles từ text
+    const createTextParticles = () => {
+      ctx.font = `${fontSize}px ${fontFamily}`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      
+      const textMetrics = ctx.measureText(text);
+      const textWidth = textMetrics.width;
+      const textHeight = fontSize;
+      
+      const particles = [];
+      const particleCount = Math.min(text.length * 20, 600);
+      
+      // Tạo particles ở vị trí ngẫu nhiên ban đầu
+      for (let i = 0; i < particleCount; i++) {
+        const centerX = canvas.width / (2 * (window.devicePixelRatio || 1));
+        const centerY = canvas.height / (2 * (window.devicePixelRatio || 1));
+        
+        particles.push({
+          startX: Math.random() * canvas.width / (window.devicePixelRatio || 1),
+          startY: Math.random() * canvas.height / (window.devicePixelRatio || 1),
+          targetX: centerX - (textWidth / 2) + Math.random() * textWidth,
+          targetY: centerY + (Math.random() - 0.5) * textHeight * 0.6,
+          x: 0,
+          y: 0,
+          progress: 0,
+          size: Math.random() * 2.5 + 1,
+          color: Math.random() < 0.4 
+            ? { r: 255, g: 80, b: 80 } 
+            : Math.random() < 0.7 
+            ? { r: 255, g: 200, b: 80 } 
+            : { r: 255, g: 150, b: 80 },
+          delay: Math.random() * 0.15,
+          speed: 0.15 + Math.random() * 0.20
+        });
+      }
+      
+      return particles;
+    };
+
+    particlesRef.current = createTextParticles();
+    let startTime = null;
+
+    const animate = (currentTime) => {
+      if (!startTime) startTime = currentTime;
+      const elapsed = (currentTime - startTime) / 1000 - delay;
+
+      if (elapsed < 0) {
+        animationRef.current = requestAnimationFrame(animate);
+        return;
+      }
+
+      const currentCtx = updateCanvas();
+      currentCtx.clearRect(0, 0, canvas.width / (window.devicePixelRatio || 1), canvas.height / (window.devicePixelRatio || 1));
+
+      let allComplete = true;
+
+      particlesRef.current.forEach((particle) => {
+        if (elapsed < particle.delay) {
+          allComplete = false;
+          particle.x = particle.startX;
+          particle.y = particle.startY;
+        } else {
+          const adjustedElapsed = elapsed - particle.delay;
+          particle.progress = Math.min(adjustedElapsed * particle.speed, 1);
+          
+          // Easing function (ease-out cubic)
+          const easeOut = 1 - Math.pow(1 - particle.progress, 3);
+          
+          particle.x = particle.startX + (particle.targetX - particle.startX) * easeOut;
+          particle.y = particle.startY + (particle.targetY - particle.startY) * easeOut;
+
+          if (particle.progress < 1) allComplete = false;
+        }
+
+        // Vẽ particle với glow effect
+        const alpha = Math.min(particle.progress * 1.2, 1);
+        const glowSize = particle.size * 2;
+        
+        // Outer glow
+        const gradient = currentCtx.createRadialGradient(
+          particle.x, particle.y, 0,
+          particle.x, particle.y, glowSize
+        );
+        gradient.addColorStop(0, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${alpha * 0.8})`);
+        gradient.addColorStop(0.5, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${alpha * 0.4})`);
+        gradient.addColorStop(1, `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, 0)`);
+        
+        currentCtx.fillStyle = gradient;
+        currentCtx.beginPath();
+        currentCtx.arc(particle.x, particle.y, glowSize, 0, Math.PI * 2);
+        currentCtx.fill();
+        
+        // Core particle
+        currentCtx.fillStyle = `rgba(${particle.color.r}, ${particle.color.g}, ${particle.color.b}, ${alpha})`;
+        currentCtx.beginPath();
+        currentCtx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        currentCtx.fill();
+      });
+
+      // Force complete sau 2 giây để đảm bảo hiển thị chữ
+      if (elapsed >= 2 && !isComplete) {
+        setIsComplete(true);
+      } else if (allComplete && !isComplete) {
+        setIsComplete(true);
+      }
+
+      if (!isComplete) {
+        animationRef.current = requestAnimationFrame(animate);
+      }
+    };
+
+    animationRef.current = requestAnimationFrame(animate);
+    
+    const handleResize = () => {
+      updateCanvas();
+      particlesRef.current = createTextParticles();
+    };
+    
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      if (animationRef.current) {
+        cancelAnimationFrame(animationRef.current);
+      }
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [text, delay, isComplete]);
+
+  return (
+    <div ref={containerRef} className="relative inline-block" style={style}>
+      <canvas
+        ref={canvasRef}
+        className="absolute inset-0 pointer-events-none"
+        style={{ opacity: isComplete ? 0 : 1, transition: 'opacity 0.8s ease-out' }}
+      />
+      <span 
+        ref={textRef}
+        className={className} 
+        style={{ 
+          opacity: isComplete ? 1 : 0, 
+          transition: 'opacity 0.8s ease-in',
+          visibility: isComplete ? 'visible' : 'hidden'
+        }}
+      >
+        {text}
+      </span>
+    </div>
+  );
+};
+
 const TetMemoriesIntro = () => {
   const [transition, setTransition] = useState(false);
   const [showNextPage, setShowNextPage] = useState(false);
@@ -219,7 +406,7 @@ const TetMemoriesIntro = () => {
       timeRef.current = currentTime - startTime;
       
       // Trigger transition
-      if (timeRef.current >= 8000 && !transition) {
+      if (timeRef.current >= 7000 && !transition) {
         setTransition(true);
         setTimeout(() => setShowNextPage(true), 1000);
       }
@@ -393,24 +580,24 @@ const TetMemoriesIntro = () => {
       >
         <div className="text-center space-y-8 px-4">
           <div className="space-y-4">
-            <h1 
-              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl animate-fadeIn tracking-wide pb-4 md:pb-6 pr-8 md:pr-12"
-              style={{ fontFamily: "'Dancing Script', cursive" }}
-            >
-              Nhìn Lại Kỷ Niệm Đáng Nhớ
-            </h1>
+            <TextParticles
+              text="Nhìn Lại Kỷ Niệm Đáng Nhớ"
+              className="text-6xl md:text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-red-300 via-yellow-200 to-orange-300 drop-shadow-2xl tracking-wide pb-4 md:pb-6 pr-8 md:pr-12"
+              style={{ fontFamily: "'Dancing Script', cursive", display: 'block' }}
+              delay={0.5}
+            />
             <div className="flex justify-center gap-3">
               <div className="h-1 w-24 bg-gradient-to-r from-transparent via-red-400 to-transparent rounded-full animate-expandWidth"></div>
               <div className="h-1 w-24 bg-gradient-to-r from-transparent via-yellow-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.2s'}}></div>
               <div className="h-1 w-24 bg-gradient-to-r from-transparent via-orange-400 to-transparent rounded-full animate-expandWidth" style={{animationDelay: '0.4s'}}></div>
             </div>
           </div>
-          <p 
-            className="text-2xl md:text-3xl text-yellow-100 font-light animate-fadeIn animation-delay-700 tracking-wider pr-8 md:pr-12"
-            style={{ fontFamily: "'Dancing Script', cursive" }}
-          >
-            Quay ngược thời gian, nhìn lại hành trình đẹp đẽ
-          </p>
+          <TextParticles
+            text="Quay ngược thời gian, nhìn lại hành trình đẹp đẽ"
+            className="text-2xl md:text-3xl text-yellow-100 font-light tracking-wider pr-8 md:pr-12"
+            style={{ fontFamily: "'Dancing Script', cursive", display: 'block' }}
+            delay={1.2}
+          />
         </div>
       </div>
       
