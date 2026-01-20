@@ -2,6 +2,36 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useAtom } from 'jotai';
 import { currentViewAtom } from './UI';
 
+// Component hiệu ứng chạy chữ (typing effect)
+const TypingText = ({ text, className, style, speed = 50, onComplete }) => {
+  const [displayedText, setDisplayedText] = useState('');
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
+
+  useEffect(() => {
+    if (currentIndex < text.length) {
+      const timeout = setTimeout(() => {
+        setDisplayedText(prev => prev + text[currentIndex]);
+        setCurrentIndex(prev => prev + 1);
+      }, speed);
+
+      return () => clearTimeout(timeout);
+    } else if (!isComplete) {
+      setIsComplete(true);
+      if (onComplete) {
+        onComplete();
+      }
+    }
+  }, [currentIndex, text, speed, isComplete, onComplete]);
+
+  return (
+    <span className={className} style={style}>
+      {displayedText}
+      {!isComplete && <span className="animate-pulse">|</span>}
+    </span>
+  );
+};
+
 // Component tạo hiệu ứng particles gộp thành chữ
 const TextParticles = ({ text, className, style, delay = 0 }) => {
   const canvasRef = useRef(null);
@@ -484,7 +514,14 @@ const TetMemoriesIntro = () => {
   }, [transition, createParticle]);
 
   // Warm landing page
-  const NextPage = () => (
+  const NextPage = () => {
+    const [showButton, setShowButton] = useState(false);
+    
+    const handleTypingComplete = () => {
+      setShowButton(true);
+    };
+
+    return (
     <div className="w-full h-screen bg-gradient-to-br from-amber-900 via-red-900 to-orange-900 flex items-center justify-center overflow-hidden relative">
       {/* Decorative elements - Responsive sizes */}
       <div className="absolute inset-0 opacity-10">
@@ -522,17 +559,23 @@ const TetMemoriesIntro = () => {
         </p>
         
         <p 
-          className="text-sm sm:text-base md:text-lg lg:text-xl text-orange-100/90 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed sm:leading-loose animate-slideUp animation-delay-500 font-light px-4 sm:px-6"
+          className="text-sm sm:text-base md:text-lg lg:text-xl text-orange-100/90 max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl mx-auto leading-relaxed sm:leading-loose font-light px-4 sm:px-6"
           style={{ 
             fontFamily: "'Dancing Script', cursive",
             textShadow: '0 0 10px rgba(255, 150, 80, 0.3), 0 0 20px rgba(255, 200, 100, 0.2)',
-            filter: 'drop-shadow(0 0 4px rgba(255, 150, 80, 0.25))'
+            filter: 'drop-shadow(0 0 4px rgba(255, 150, 80, 0.25))',
+            minHeight: '4rem'
           }}
         >
-          Dòng thời gian lặng lẽ quay ngược, mang theo tiếng cười, yêu thương và những kỷ niệm đẹp đã làm nên một năm trọn vẹn và đáng nhớ.
+          <TypingText
+            text="Dòng thời gian lặng lẽ quay ngược, mang theo tiếng cười, yêu thương và những kỷ niệm đẹp đã làm nên một năm trọn vẹn và đáng nhớ."
+            speed={30}
+            onComplete={handleTypingComplete}
+          />
         </p>
         
-        <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4 sm:pt-6 md:pt-8 animate-slideUp animation-delay-700 px-4">
+        {showButton && (
+          <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-4 sm:pt-6 md:pt-8 animate-slideUp px-4">
           <button 
             onClick={() => setCurrentView("book")}
             className="group relative w-auto inline-block px-6 py-3 sm:px-8 sm:py-4 md:px-12 md:py-5 bg-gradient-to-r from-red-600 to-orange-600 text-white text-base sm:text-lg md:text-xl font-semibold rounded-full overflow-visible transition-all duration-500 hover:shadow-2xl hover:shadow-red-500/50 hover:scale-105 active:scale-95 animate-button-glow"
@@ -554,6 +597,7 @@ const TetMemoriesIntro = () => {
             <div className="absolute inset-0 bg-gradient-to-r from-yellow-400 to-red-500 opacity-0 group-hover:opacity-100 group-active:opacity-100 transition-opacity duration-500 rounded-full"></div>
           </button>
         </div>
+        )}
       </div>
 
       {/* Floating petals - Responsive count */}
@@ -579,7 +623,8 @@ const TetMemoriesIntro = () => {
         ))}
       </div>
     </div>
-  );
+    );
+  };
 
   if (showNextPage) {
     return <NextPage />;
