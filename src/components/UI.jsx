@@ -27,7 +27,7 @@ export const shouldRotateBookAtom = atom(false);
 // Hiển thị ảnh bìa trước và bìa sau
 export const pages = [
   {
-    front: "bìa_truoc",
+    front: "bia_truoc",
     back: pictures[0],
   },
 ];
@@ -40,7 +40,7 @@ for (let i = 1; i < pictures.length - 1; i += 2) {
 
 pages.push({
   front: pictures[pictures.length - 1],
-  back: "book-back",
+  back: "bia_sau",
 });
 
 export const UI = () => {
