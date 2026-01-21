@@ -1,6 +1,6 @@
 import { Loader } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useAtom } from "jotai";
 import { Experience } from "./components/Experience";
 import { UI, currentViewAtom } from "./components/UI";
@@ -9,6 +9,29 @@ import TetMemoriesIntro from "./components/Intro";
 
 function App() {
   const [currentView] = useAtom(currentViewAtom);
+  const [backgroundImage, setBackgroundImage] = useState("");
+
+  // Xử lý responsive background
+  useEffect(() => {
+    const updateBackground = () => {
+      const width = window.innerWidth;
+      if (width < 768) {
+        // Điện thoại
+        setBackgroundImage("url(/images/bg_thu_dien_thoai.jpg)");
+      } else if (width >= 768 && width < 1024) {
+        // iPad
+        setBackgroundImage("url(/images/bg_thu_ipad.jpg)");
+      } else {
+        // Laptop và màn hình lớn
+        setBackgroundImage("url(/images/bg_book.jpg)");
+      }
+    };
+
+    updateBackground();
+    window.addEventListener("resize", updateBackground);
+    
+    return () => window.removeEventListener("resize", updateBackground);
+  }, []);
  
   // Đoạn code phat nhạc nền
   useEffect(() => {
@@ -36,7 +59,7 @@ function App() {
               fov: 45,
             }}
             style={{
-              backgroundImage: "url(/images/bg_book.jpg)",
+              backgroundImage: backgroundImage,
               backgroundSize: "cover",
               backgroundPosition: "center",
               backgroundRepeat: "no-repeat",
