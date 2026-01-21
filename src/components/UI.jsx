@@ -1,5 +1,5 @@
 import { atom, useAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export const currentViewAtom = atom("intro"); // "intro", "book" hoặc "letters"
 
@@ -22,7 +22,7 @@ const pictures = [
 ];
 
 export const pageAtom = atom(0);
-export const autoFlipEnabledAtom = atom(false);
+export const autoFlipEnabledAtom = atom(true); // Cho phép người dùng lật tay ngay từ đầu
 export const shouldRotateBookAtom = atom(false);
 // Hiển thị ảnh bìa trước và bìa sau
 export const pages = [
@@ -44,51 +44,14 @@ pages.push({
 });
 
 export const UI = () => {
-  const [page, setPage] = useAtom(pageAtom);
-  const [autoFlipEnabled, setAutoFlipEnabled] = useAtom(autoFlipEnabledAtom);
-  const [isAutoFlipping, setIsAutoFlipping] = useState(true);
+  const [page] = useAtom(pageAtom);
   const [currentView, setCurrentView] = useAtom(currentViewAtom);
-  const [, setShouldRotateBook] = useAtom(shouldRotateBookAtom);
 
+  // Phát âm thanh khi lật trang
   useEffect(() => {
     const audio = new Audio("/audio/page-flip-01a.mp3");
     audio.play();
   }, [page]);
-
-  // Tự động lật trang khi bắt đầu
-  useEffect(() => {
-    if (!isAutoFlipping) return;
-
-    let currentPage = 0;
-
-    const autoFlip = () => {
-      const totalPages = pages.length;
-
-      // Lật từ đầu đến cuối
-      if (currentPage < totalPages) {
-        currentPage++;
-        setPage(currentPage);
-        // Lật trang tiếp theo sau 300ms
-        setTimeout(autoFlip, 300);
-      } else {
-        // Đã đến trang cuối, dừng auto-flip và kích hoạt xoay sách
-        setIsAutoFlipping(false);
-        // Kích hoạt xoay sách
-        setTimeout(() => {
-          setShouldRotateBook(true);
-        }, 800); // Đợi một chút trước khi bắt đầu xoay
-      }
-    };
-
-    // Bắt đầu tự động lật sau 2 giây
-    const startTimer = setTimeout(() => {
-      autoFlip();
-    }, 2000);
-
-    return () => {
-      clearTimeout(startTimer);
-    };
-  }, [isAutoFlipping, setPage, setShouldRotateBook]);
 
   return (
     <>
