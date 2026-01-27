@@ -15,16 +15,16 @@ export const Letters = () => {
   const signatureRef = useRef(null);
   const fireworksIconRef = useRef(null);
 
-  // Kiểm tra kích thước màn hình
+  // Kiểm tra kích thước màn hình (iPad Pro dùng chung background iPad)
   useEffect(() => {
     const checkDeviceType = () => {
       const width = window.innerWidth;
       if (width < 640) {
         setDeviceType('mobile'); // < 640px: điện thoại
-      } else if (width >= 640 && width < 1024) {
-        setDeviceType('tablet'); // 640px - 1024px: iPad
+      } else if (width >= 640 && width <= 1366) {
+        setDeviceType('tablet'); // 640px - 1366px: iPad và iPad Pro
       } else {
-        setDeviceType('desktop'); // >= 1024px: laptop/desktop
+        setDeviceType('desktop'); // > 1366px: laptop/desktop
       }
     };
 

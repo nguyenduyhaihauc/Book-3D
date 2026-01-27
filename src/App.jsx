@@ -11,25 +11,25 @@ function App() {
   const [currentView] = useAtom(currentViewAtom);
   const [backgroundImage, setBackgroundImage] = useState("");
 
-  // Xử lý responsive background
+  // Xử lý responsive background (iPad Pro dùng chung background iPad)
   useEffect(() => {
     const updateBackground = () => {
       const width = window.innerWidth;
       if (width < 768) {
         // Điện thoại
         setBackgroundImage("url(/images/bg_thu_dien_thoai.jpg)");
-      } else if (width >= 768 && width < 1024) {
-        // iPad
+      } else if (width >= 768 && width <= 1366) {
+        // iPad và iPad Pro (viewport tối đa 1366px)
         setBackgroundImage("url(/images/bg_thu_ipad.jpg)");
       } else {
-        // Laptop và màn hình lớn
+        // Laptop và màn hình lớn (> 1366px)
         setBackgroundImage("url(/images/bg_book.jpg)");
       }
     };
 
     updateBackground();
     window.addEventListener("resize", updateBackground);
-    
+
     return () => window.removeEventListener("resize", updateBackground);
   }, []);
  
